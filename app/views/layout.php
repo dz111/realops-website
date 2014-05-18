@@ -1,10 +1,22 @@
+<?php
+if (isset($menu)) {
+  $GLOBALS['menu'] = $menu;
+}
+
+function menu_active($item) {
+  global $menu;
+  if (isset($menu) && $menu == $item) {
+    echo ' class="active"';
+  }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>RealOps Sydney 2014</title>
+    <title><?=$GLOBALS['sitename']?></title>
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
@@ -29,12 +41,12 @@
         </div><!-- /.navbar-header -->
         <div class="collapse navbar-collapse" id="realops-navbar">
           <ul class="nav navbar-nav navbar-right">
-            <li class="active"><a href="/">Home</a></li>
-            <li><a href="/main/schedule">Book a Flight</a></li>
-            <li><a href="#">Pilot Briefing</a></li>
-            <li><a href="#">Scenery and Charts</a></li>
-            <li><a href="#">ATC Information</a></li>
-            <li><a href="#">Contact Us</a></li>
+            <li<?php menu_active('index') ?>><a href="/">Home</a></li>
+            <li<?php menu_active('sked') ?>><a href="/main/schedule">Book a Flight</a></li>
+            <li<?php menu_active('pilots') ?>><a href="/main/pilots">Pilot Briefing</a></li>
+            <li<?php menu_active('info') ?>><a href="/main/info">Scenery and Charts</a></li>
+            <li<?php menu_active('atc') ?>><a href="/main/atc">ATC Information</a></li>
+            <li<?php menu_active('contact') ?>><a href="/main/contact">Contact Us</a></li>
           </ul>
         </div><!-- /.navbar-collapse -->
       </div><!-- /.container -->
@@ -56,24 +68,16 @@
             <div class="panel-body">
               <ul class="list-unstyled">
                 <li><a href="/main/schedule">Flight schedules</a></li>
-                <li><a href="#">Pilot briefing</a></li>
-                <li><a href="#">Discussion forum</a></li>
-                <li><a href="#">Flight plan submission</a></li>
+                <li><a href="/main/briefing">Pilot briefing</a></li>
+                <li><a href="#" target="_blank">Discussion forum</a></li>
+                <li><a href="http://www.vatsim.net/fp/" target="_blank">Flight plan submission</a></li>
               </ul>
             </div><!-- /.panel-body -->
           </div><!-- /.panel-default -->
           <div class="panel panel-default" id="realops-login-panel">
-            <div class="panel-heading">Login</div>
+            <div class="panel-heading">User Control Panel</div>
             <div class="panel-body">
-              <form role="form">
-                <div class="form-group">
-                  <input type="text" class="form-control" id="realops-login-id" placeholder="VATSIM ID" />
-                </div>
-                <div class="form-group">
-                  <input type="password" class="form-control" id="realops-login-password" placeholder="Password" />
-                </div>
-                <button type="submit" class="btn btn-default">Login</button>
-              </form>
+              <?php include(APP_PATH . "inc/usercontrol.php") ?>
             </div><!-- /.panel-body -->
           </div><!-- /#realops-login-panel -->
         </div><!-- /.col-sm-3 -->

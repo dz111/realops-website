@@ -24,6 +24,7 @@ class Controller extends KISS_Controller {
 //===============================================================
 class View extends KISS_View {
   static function output($view, $data) {
+    $data['view'] = $view;
     if ($view) {
       $data['body'][] = View::do_fetch(APP_PATH . "views/" . $view, $data);
     }

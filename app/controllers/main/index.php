@@ -1,5 +1,5 @@
 <?php
 function _index() {
-  $data['body'][] = "Hi";
-  View::output('', $data);
+  $data['menu'] = 'index';
+  View::output('main/index.php', $data);
 }

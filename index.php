@@ -82,6 +82,11 @@ function __autoload($classname) {
 */
 
 //===============================================
+// Initialize sessions
+//===============================================
+session_start();
+
+//===============================================
 // Start the controller
 //===============================================
 $controller = new Controller(APP_PATH.'controllers/',WEB_FOLDER,'main','index');
