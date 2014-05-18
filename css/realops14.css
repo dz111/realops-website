@@ -1,0 +1,12 @@
+.jumbotron {
+  margin-top: -20px;
+}
+
+h1 {
+  margin-bottom: 20px;
+}
+
+#realops-flight-schedule td, #realops-flight-schedule th {
+  text-align: center;
+  vertical-align: middle;
+}
