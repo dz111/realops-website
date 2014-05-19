@@ -7,18 +7,14 @@ require('kissmvc_core.php');
 class Route {
   static protected $table = array();
   
-  static function match($verbs, $route, $controller, $action=false) {
+  static function match($verbs, $route, $action) {
     $request_uri_parts = $route ? explode('/', $route) : array();
     if (!is_array($verbs)) {
       $verbs = array($verbs);
     }
-    if (!$action) {
-      $action = "_" . $controller;
-    }
     foreach ($verbs as $verb) {
       self::$table[] = array('verb' => strtoupper($verb),
                              'uri_parts' => $request_uri_parts,
-                             'controller' => $controller,
                              'action' => $action);
     }
   }
@@ -57,7 +53,6 @@ class Route {
       return array('uri' => $uri,
                    'verb' => $verb,
                    'params' => $params,
-                   'controller' => $row['controller'],
                    'action' => $row['action']);
     }
     // Didn't match - 404!
@@ -88,8 +83,11 @@ class Controller extends KISS_Controller {
     $match = Route::do_route($uri, $verb);
     if (!$match) $this->request_not_found();
     $this->params = $match['params'];
-    $this->controller = $match['controller'];
-    $this->action = $match['action'];
+    // $match['action'] actually holds the controller name too
+    $GLOBALS['action'] = $match['action'];
+    $action = explode('/', $match['action']);
+    $this->controller = $action[0];
+    $this->action = $action[1];
     return $this;
   }
   
@@ -111,5 +109,9 @@ class View extends KISS_View {
       $data['body'][] = View::do_fetch(APP_PATH . "views/" . $view . '.php', $data);
     }
     View::do_dump(APP_PATH . "views/layout.php", $data);
+  }
+  
+  static function auto($data) {
+    self::output($GLOBALS['action'], $data);
   }
 }

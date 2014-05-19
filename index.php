@@ -82,4 +82,4 @@ function __autoload($classname) {
 //===============================================
 // Start the controller
 //===============================================
-$controller = new Controller(APP_PATH.'controllers/',WEB_FOLDER,'main','index');
+$controller = new Controller(APP_PATH.'controllers/',WEB_FOLDER);
