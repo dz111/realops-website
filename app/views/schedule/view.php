@@ -1,1 +1,1 @@
-<h1>Flight #<?=$flight_id?></h1>
+<h1>Flight #<?=htmlspecialchars($flight_id)?></h1>

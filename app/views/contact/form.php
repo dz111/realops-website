@@ -10,30 +10,21 @@ function selected($item) {
 }
 ?>
 <h1>Contact Us</h1>
-<form action="/contact" method="post">
- <fieldset>
- <legend>Send us a message</legend>
-  <table id="contact">
-   <tr>
-    <td>To</td>
-    <td>
-     <select name="contact_addressee">
+<form action="/contact" method="post" role="form">
+  <div class="form-group">
+    <label for="contact_addressee">Type of enquiry</label>
+    <select name="contact_addressee" class="form-control">
       <option value="event"<?=selected("event")?>>Event and Media Enquiries</option>
       <option value="it"<?=selected("it")?>>Website Enquiries</option>
-     </select>
-    </td>
-   </tr>
-   <tr>
-    <td>Subject</td>
-    <td><input type="text" size="32" name="contact_subject" value="<?=$contact_subject?>"/></td>
-   </tr>
-   <tr>
-    <td>Message</td>
-    <td><textarea rows="10" cols="32" name="contact_message"><?=$contact_message?></textarea></td>
-   </tr>
-   <tr>
-    <td colspan="2"><input type="submit" name="contact_submit" value="Send" /></td>
-   </tr>
-  </table>
-</fieldset>
+    </select>
+  </div>
+  <div class="form-group">
+    <label for="contact_subject">Subject</label>
+    <input type="text" name="contact_subject" value="<?=htmlspecialchars($contact_subject)?>" class="form-control"/>
+  </div>
+  <div class="form-group">
+    <label for="contact_message">Message</label>
+    <textarea rows="10" cols="32" name="contact_message" class="form-control"><?=htmlspecialchars($contact_message)?></textarea>
+  </div>
+  <button type="submit" class="btn btn-default">Send</button>
 </form>

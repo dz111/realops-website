@@ -32,6 +32,7 @@ class Route {
   }
   
   static function do_route($uri, $verb) {
+    $uri = $uri ? explode('?', $uri)[0] : '';
     $request_uri_parts = $uri ? explode('/', $uri) : array();
     $params = array();
     foreach (self::$table as $row) {
@@ -43,7 +44,7 @@ class Route {
         // Check if this is a parameter
         if (substr($table_part, 0, 1) == '{' &&
             substr($table_part, -1, 1) == '}') {
-          $params[substr($table_part, 1, -1)] = $req_part;
+          $params[substr($table_part, 1, -1)] = urldecode($req_part);
           continue;
         }
         // Otherwise this part must match exactly
