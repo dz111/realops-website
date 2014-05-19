@@ -35,7 +35,7 @@ class Route {
     $request_uri_parts = $uri ? explode('/', $uri) : array();
     $params = array();
     foreach (self::$table as $row) {
-      if (!$row['verb'] == $verb) continue;
+      if ($row['verb'] != $verb) continue;
       if (count($row['uri_parts']) != count($request_uri_parts)) continue;
       for ($i = 0, $count = count($row['uri_parts']); $i < $count; ++$i) {
         $table_part = $row['uri_parts'][$i];
@@ -74,7 +74,7 @@ class Controller extends KISS_Controller {
   function __construct($controller_path, $web_folder) {
     $this->controller_path = $controller_path;
     $this->web_folder = $web_folder;
-    $this->match_route_table()->route_request();
+    $this->match_route_table()->add_cgi_params()->route_request();
   }
   
   function match_route_table() {
@@ -88,6 +88,11 @@ class Controller extends KISS_Controller {
     $action = explode('/', $match['action']);
     $this->controller = $action[0];
     $this->action = $action[1];
+    return $this;
+  }
+  
+  function add_cgi_params() {
+    $this->params = array_merge($this->params, $_REQUEST);
     return $this;
   }
   

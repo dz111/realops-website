@@ -44,7 +44,7 @@ function menu_active($item) {
             <li<?php menu_active('index') ?>><a href="/">Home</a></li>
             <li<?php menu_active('sked') ?>><a href="/schedule">Book a Flight</a></li>
             <li<?php menu_active('pilots') ?>><a href="/pilots">Pilot Briefing</a></li>
-            <li<?php menu_active('info') ?>><a href="/info">Scenery and Charts</a></li>
+            <li<?php menu_active('charts') ?>><a href="/charts">Scenery and Charts</a></li>
             <li<?php menu_active('atc') ?>><a href="/atc">ATC Information</a></li>
             <li<?php menu_active('contact') ?>><a href="/contact">Contact Us</a></li>
           </ul>
@@ -68,7 +68,7 @@ function menu_active($item) {
             <div class="panel-body">
               <ul class="list-unstyled">
                 <li><a href="/schedule">Flight schedules</a></li>
-                <li><a href="/briefing">Pilot briefing</a></li>
+                <li><a href="/pilots">Pilot briefing</a></li>
                 <li><a href="#" target="_blank">Discussion forum</a></li>
                 <li><a href="http://www.vatsim.net/fp/" target="_blank">Flight plan submission</a></li>
               </ul>
