@@ -4,11 +4,8 @@
 //===============================================
 ini_set('display_errors','On');
 error_reporting(E_ALL);
-
-//===============================================
-// mod_rewrite
-//===============================================
-//Please configure via .htaccess or httpd.conf
+//ini_set('display_errors','Off');
+//error_reporting(E_NONE);
 
 //===============================================
 // Madatory KISSMVC Settings (please configure)
@@ -25,13 +22,14 @@ $GLOBALS['sitename']='RealOps Sydney 2014 - VATSIM Australia Pacific';
 // Includes
 //===============================================
 require('kissmvc.php');
+require(APP_PATH . 'route.php');
 
 //===============================================
 // Session
 //===============================================
-/*
+
 session_start();
-*/
+
 //===============================================
 // Uncaught Exception Handling
 //===============================================s
@@ -80,11 +78,6 @@ function __autoload($classname) {
     require_once(APP_PATH.'helpers/'.$classname.'.php');  
 }
 */
-
-//===============================================
-// Initialize sessions
-//===============================================
-session_start();
 
 //===============================================
 // Start the controller
