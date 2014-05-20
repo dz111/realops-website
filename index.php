@@ -51,25 +51,20 @@ function custom_error($msg='') {
 //===============================================
 // Database
 //===============================================
-/*
 function getdbh() {
   if (!isset($GLOBALS['dbh']))
     try {
-      $GLOBALS['dbh'] = new PDO('sqlite:'.APP_PATH.'db/kissmvc.sqlite');
-      //$GLOBALS['dbh'] = new PDO('mysql:host=localhost;dbname=dbname', 'username', 'password');
-
+      $GLOBALS['dbh'] = new PDO('mysql:host=localhost;dbname=realops', 'root', '');
     } catch (PDOException $e) {
       die('Connection failed: '.$e->getMessage());
     }
   return $GLOBALS['dbh'];
 }
-*/
 
 //===============================================
 // Autoloading for Business Classes
 //===============================================
 // Assumes Model Classes start with capital letters and Helpers start with lower case letters
-/*
 function __autoload($classname) {
   $a=$classname[0];
   if ($a >= 'A' && $a <='Z')
@@ -77,7 +72,6 @@ function __autoload($classname) {
   else
     require_once(APP_PATH.'helpers/'.$classname.'.php');  
 }
-*/
 
 //===============================================
 // Start the controller

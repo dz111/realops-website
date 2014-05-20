@@ -66,6 +66,30 @@ class Route {
 // Model/ORM
 //===============================================================
 class Model extends KISS_Model  {
+  protected $tablename = false;
+  protected $dbhfnname = 'getdbh';
+  function __construct($id=false) {
+    // Infer table name if not defined
+    if ($this->tablename === false) {
+      $this->tablename = strtolower(get_class($this)) . 's';
+    }
+    // Ask the database about the structure of this table
+    $dbh = $this->getdbh();
+    $sql = 'SHOW COLUMNS IN ' . $this->enquote($this->tablename);
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    while ($rs = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $name = $rs['Field'];
+      $this->rs[$name] = '';
+      if ($rs['Key'] == 'PRI') {
+        $this->pkname = $name;
+      }
+    }
+    // Retrieve a row if the primary key is given
+    if ($id !== false) {
+      $this->retrieve($id);
+    }
+  }
 }
 
 //===============================================================
