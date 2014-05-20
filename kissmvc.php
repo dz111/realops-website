@@ -36,7 +36,7 @@ class Route {
     $request_uri_parts = $uri ? explode('/', $uri) : array();
     $params = array();
     foreach (self::$table as $row) {
-      if ($row['verb'] != $verb) continue;
+      if ($row['verb'] != $verb && $row['verb'] != '*') continue;
       if (count($row['uri_parts']) != count($request_uri_parts)) continue;
       for ($i = 0, $count = count($row['uri_parts']); $i < $count; ++$i) {
         $table_part = $row['uri_parts'][$i];
