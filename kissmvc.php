@@ -65,9 +65,15 @@ class Route {
 //===============================================================
 // Model/ORM
 //===============================================================
+define('MYSQL_TIME_FORMAT', 'Y-m-d H:i:s');
 class Model extends KISS_Model  {
   protected $tablename = false;
+  protected $createtime = false;
+  protected $updatetime = false;
+  protected $softdelete = false;
+  
   protected $dbhfnname = 'getdbh';
+  
   function __construct($id=false) {
     // Infer table name if not defined
     if ($this->tablename === false) {
@@ -89,6 +95,55 @@ class Model extends KISS_Model  {
     if ($id !== false) {
       $this->retrieve($id);
     }
+  }
+  
+  function create() {
+    if ($this->createtime) $this->rs['created_at'] = date(MYSQL_TIME_FORMAT);
+    $id = $this->rs[$this->pkname];
+    parent::create();
+    if ($this->rs[$this->pkname] < 1) $this->rs[$this->pkname] = $id;
+  }
+  
+  function update() {
+    if ($this->updatetime) $this->rs['updated_at'] = date(MYSQL_TIME_FORMAT);
+    parent::update();
+  }
+  
+  function delete() {
+    if ($this->softdelete) {
+      $this->rs['deleted_at'] = date(MYSQL_TIME_FORMAT);
+      parent::update();
+    } else {
+      $this->force_delete();
+    }
+  }
+  
+  function restore() {
+    if ($this->softdelete) {
+      $this->rs['deleted_at'] = 0;
+      parent::update();
+    }
+  }
+  
+  function force_delete() {
+    parent::delete();
+    $this->rs[$this->pkname] = 0;
+  }
+  
+  function exists($checkdb=true) {
+    return (bool)parent::exists($checkdb);
+  }
+  
+  function trashed($checkdb=true) {
+    if (!$this->softdelete) return false;
+    if (!$this->exists(false)) return false;
+    if ($checkdb) {
+      $dbh = $this->getdbh();
+      $sql = "SELECT `deleted_at` FROM " . $this->enquote($this->tablename) . " WHERE " . $this->enquote($this->pkname) . "=?";
+      $stmt = $dbh->prepare($sql);
+      $stmt->bindValue(1, $this->rs[$this->pkname]);
+    }
+    return (isset($this->rs['deleted_at']) && $this->rs['deleted_at'] > 0);
   }
 }
 
