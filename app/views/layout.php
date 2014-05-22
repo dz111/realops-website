@@ -41,12 +41,12 @@ function menu_active($item) {
         </div><!-- /.navbar-header -->
         <div class="collapse navbar-collapse" id="realops-navbar">
           <ul class="nav navbar-nav navbar-right">
-            <li<?php menu_active('index') ?>><a href="/">Home</a></li>
-            <li<?php menu_active('sked') ?>><a href="/schedule">Book a Flight</a></li>
-            <li<?php menu_active('pilots') ?>><a href="/pilots">Pilot Briefing</a></li>
-            <li<?php menu_active('charts') ?>><a href="/charts">Scenery and Charts</a></li>
-            <li<?php menu_active('atc') ?>><a href="/atc">ATC Information</a></li>
-            <li<?php menu_active('contact') ?>><a href="/contact">Contact Us</a></li>
+            <li<?php menu_active('index') ?>><a href="<?=Route::link('index')?>">Home</a></li>
+            <li<?php menu_active('sked') ?>><a href="<?=Route::link('schedule')?>">Book a Flight</a></li>
+            <li<?php menu_active('pilots') ?>><a href="<?=Route::link('pilots')?>">Pilot Briefing</a></li>
+            <li<?php menu_active('charts') ?>><a href="<?=Route::link('charts')?>">Scenery and Charts</a></li>
+            <li<?php menu_active('atc') ?>><a href="<?=Route::link('atc')?>">ATC Information</a></li>
+            <li<?php menu_active('contact') ?>><a href="<?=Route::link('contact')?>">Contact Us</a></li>
           </ul>
         </div><!-- /.navbar-collapse -->
       </div><!-- /.container -->
@@ -67,8 +67,8 @@ function menu_active($item) {
             <div class="panel-heading">Quick links</div>
             <div class="panel-body">
               <ul class="list-unstyled">
-                <li><a href="/schedule">Flight schedules</a></li>
-                <li><a href="/pilots">Pilot briefing</a></li>
+                <li><a href="<?=Route::link('schedules')?>">Flight schedules</a></li>
+                <li><a href="<?=Route::link('pilots')?>">Pilot briefing</a></li>
                 <li><a href="#" target="_blank">Discussion forum</a></li>
                 <li><a href="http://www.vatsim.net/fp/" target="_blank">Flight plan submission</a></li>
               </ul>

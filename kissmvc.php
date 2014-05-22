@@ -7,7 +7,7 @@ require('kissmvc_core.php');
 class Route {
   static protected $table = array();
   
-  static function match($verbs, $route, $action) {
+  static function match($verbs, $route, $controller, $name='') {
     $request_uri_parts = $route ? explode('/', $route) : array();
     if (!is_array($verbs)) {
       $verbs = array($verbs);
@@ -15,20 +15,22 @@ class Route {
     foreach ($verbs as $verb) {
       self::$table[] = array('verb' => strtoupper($verb),
                              'uri_parts' => $request_uri_parts,
-                             'action' => $action);
+                             'controller' => $controller,
+                             'name' => $name,
+                             'route' => $route);
     }
   }
   
-  static function get($route, $controller, $action=false) {
-    Route::match('GET', $route, $controller, $action);
+  static function get($route, $controller, $name='') {
+    Route::match('GET', $route, $controller, $name);
   }
   
-  static function post($route, $controller, $action=false) {
-    Route::match('POST', $route, $controller, $action);
+  static function post($route, $controller, $name='') {
+    Route::match('POST', $route, $controller, $name);
   }
   
-  static function any($route, $controller, $action=false) {
-    Route::match('*', $route, $controller, $action);
+  static function any($route, $controller, $name='') {
+    Route::match('*', $route, $controller, $name);
   }
   
   static function do_route($uri, $verb) {
@@ -54,10 +56,18 @@ class Route {
       return array('uri' => $uri,
                    'verb' => $verb,
                    'params' => $params,
-                   'action' => $row['action']);
+                   'controller' => $row['controller']);
     }
     // Didn't match - 404!
     return false;
+  }
+  
+  static function link($name) {
+    foreach (self::$table as $row) {
+      if ($row['name'] == $name) {
+        return WEB_FOLDER . $row['route'];
+      }
+    }
   }
 }
 
@@ -164,10 +174,10 @@ class Controller extends KISS_Controller {
     if (!$match) $this->request_not_found();
     $this->params = $match['params'];
     // $match['action'] actually holds the controller name too
-    $GLOBALS['action'] = $match['action'];
-    $action = explode('/', $match['action']);
-    $this->controller = $action[0];
-    $this->action = $action[1];
+    $GLOBALS['controller'] = $match['controller'];
+    $controller_parts = explode('/', $match['controller']);
+    $this->controller = $controller_parts[0];
+    $this->action = $controller_parts[1];
     return $this;
   }
   
@@ -197,6 +207,6 @@ class View extends KISS_View {
   }
   
   static function auto($data) {
-    self::output($GLOBALS['action'], $data);
+    self::output($GLOBALS['controller'], $data);
   }
 }

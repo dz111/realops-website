@@ -1,17 +1,17 @@
 <?php
 
-Route::get('/', 'main/index');
+Route::get('/', 'main/index', 'index');
 
-Route::get('/schedule', 'schedule/list');
+Route::get('/schedule', 'schedule/list', 'schedule');
 Route::get('/schedule/{flightid}', 'schedule/view');
 
-Route::get('/pilots', 'main/pilots');
-Route::get('/charts', 'main/charts');
+Route::get('/pilots', 'main/pilots', 'pilots');
+Route::get('/charts', 'main/charts', 'charts');
 
-Route::get('/atc', 'atc/form');
+Route::get('/atc', 'atc/form', 'atc');
 Route::post('/atc', 'atc/submit');
 
-Route::get('/contact', 'contact/form');
+Route::get('/contact', 'contact/form', 'contact');
 Route::post('/contact', 'contact/submit');
 
 ?>

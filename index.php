@@ -11,7 +11,7 @@ error_reporting(E_ALL);
 // Madatory KISSMVC Settings (please configure)
 //===============================================
 define('APP_PATH','app/'); //with trailing slash pls
-define('WEB_FOLDER','/'); //with trailing slash pls
+define('WEB_FOLDER',''); //with trailing slash pls
 
 //===============================================
 // Other Settings
