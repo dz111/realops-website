@@ -11,59 +11,18 @@
     </tr>
   </thead>
   <tbody>
+<?php
+foreach ($flights as $flight) { ?>
     <tr>
-      <td>AM204</td>
-      <td>BE20</td>
-      <td>YSDU</td>
-      <td>09:30</td>
-      <td>YSSY</td>
-      <td>10:45</td>
+      <td><?=$flight->acid?></td>
+      <td><?=$flight->type?></td>
+      <td><?=$flight->adep?></td>
+      <td><?=date('H:i', strtotime($flight->std))?></td>
+      <td><?=$flight->ades?></td>
+      <td><?=date('H:i', strtotime($flight->sta))?></td>
       <td>Available<br/>Book</td>
     </tr>
-    <tr>
-      <td>AM204</td>
-      <td>BE20</td>
-      <td>YSDU</td>
-      <td>09:30</td>
-      <td>YSSY</td>
-      <td>10:45</td>
-      <td>Available<br/>Book</td>
-    </tr>
-    <tr>
-      <td>AM204</td>
-      <td>BE20</td>
-      <td>YSDU</td>
-      <td>09:30</td>
-      <td>YSSY</td>
-      <td>10:45</td>
-      <td>Available<br/>Book</td>
-    </tr>
-    <tr>
-      <td>AM204</td>
-      <td>BE20</td>
-      <td>YSDU</td>
-      <td>09:30</td>
-      <td>YSSY</td>
-      <td>10:45</td>
-      <td>Available<br/>Book</td>
-    </tr>
-    <tr>
-      <td>AM204</td>
-      <td>BE20</td>
-      <td>YSDU</td>
-      <td>09:30</td>
-      <td>YSSY</td>
-      <td>10:45</td>
-      <td>Available<br/>Book</td>
-    </tr>
-    <tr>
-      <td>AM204</td>
-      <td>BE20</td>
-      <td>YSDU</td>
-      <td>09:30</td>
-      <td>YSSY</td>
-      <td>10:45</td>
-      <td>Available<br/>Book</td>
-    </tr>
+<?php
+} ?>
   </tbody>
 </table>
