@@ -35,5 +35,3 @@ foreach ($flights as $flight) { ?>
 } ?>
   </tbody>
 </table>
-
-<pre><?php var_dump($flights); ?></pre>
