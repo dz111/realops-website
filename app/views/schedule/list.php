@@ -7,7 +7,7 @@
       <th>STD</th>
       <th>Destination</th>
       <th>STA</th>
-      <th>Status</th>
+      <th>Booked by</th>
     </tr>
   </thead>
   <tbody>
@@ -20,9 +20,20 @@ foreach ($flights as $flight) { ?>
       <td><?=date('H:i', strtotime($flight->std))?></td>
       <td><?=$flight->ades?></td>
       <td><?=date('H:i', strtotime($flight->sta))?></td>
-      <td>Available<br/>Book</td>
+      <td>
+<?php
+  if ($flight->user) { ?>
+        <?=$flight->user->name?>
+<?php
+  } else { ?>
+        Available
+<?php
+  } ?>
+      </td>
     </tr>
 <?php
 } ?>
   </tbody>
 </table>
+
+<pre><?php var_dump($flights); ?></pre>

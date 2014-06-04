@@ -13,7 +13,7 @@ class Route {
       $verbs = array($verbs);
     }
     foreach ($verbs as $verb) {
-      self::$table[] = array('verb' => strtoupper($verb),
+      static::$table[] = array('verb' => strtoupper($verb),
                              'uri_parts' => $request_uri_parts,
                              'controller' => $controller,
                              'name' => $name,
@@ -37,7 +37,7 @@ class Route {
     $uri = $uri ? explode('?', $uri)[0] : '';
     $request_uri_parts = $uri ? explode('/', $uri) : array();
     $params = array();
-    foreach (self::$table as $row) {
+    foreach (static::$table as $row) {
       if ($row['verb'] != $verb && $row['verb'] != '*') continue;
       if (count($row['uri_parts']) != count($request_uri_parts)) continue;
       for ($i = 0, $count = count($row['uri_parts']); $i < $count; ++$i) {
@@ -63,7 +63,7 @@ class Route {
   }
   
   static function link($name) {
-    foreach (self::$table as $row) {
+    foreach (static::$table as $row) {
       if ($row['name'] == $name) {
         return WEB_FOLDER . $row['route'];
       }
@@ -75,21 +75,36 @@ class Route {
 //===============================================================
 // Model/ORM
 //===============================================================
-define('MYSQL_TIME_FORMAT', 'Y-m-d H:i:s');
-class Model extends KISS_Model  {
+abstract class Model {
+  // Override these variables as appropriate
   protected $tablename = false;
   protected $createtime = false;
   protected $updatetime = false;
   protected $softdelete = false;
-  
+  protected $pkname = false;
   protected $dbhfnname = 'getdbh';
+  protected $DB_TYPE = 'MYSQL';
+  protected $COMPRESS_ARRAY = true;
+  protected $query_builder = "QueryBuilder";
   
-  function __construct($id=false) {
+  protected $rs = array();
+  protected $exists = false;
+  protected $dirty = array();
+  
+  /**
+   * 'Model' class
+   * Provides an object-relational model interface
+   * __construct(mixed $arg)
+   * @param  arg(array)  parameters to place into a new Model
+   * @param  arg         index of Model to be loaded
+   * @param  exists      true if is known that the Model exists
+   */
+  public function __construct($arg='', $exists=false) {
     // Infer table name if not defined
-    if ($this->tablename === false) {
+    if (!$this->tablename) {
       $this->tablename = strtolower(get_class($this)) . 's';
     }
-    // Ask the database about the structure of this table
+    // Discover the table schema
     $dbh = $this->getdbh();
     $sql = 'SHOW COLUMNS IN ' . $this->enquote($this->tablename);
     $stmt = $dbh->prepare($sql);
@@ -101,60 +116,469 @@ class Model extends KISS_Model  {
         $this->pkname = $name;
       }
     }
-    // Retrieve a row if the primary key is given
-    if ($id !== false) {
-      $this->retrieve($id);
+    if (isset($arg) && $arg) {
+      if (is_array($arg)) {
+        // Set up a new Model if given array
+        $this->load_from_array($arg);
+      } else {
+        // Retrieve row for given primary key
+        $this->select_row($arg);
+      }
+    }
+    if ($exists) {
+      $this->exists = true;
+      $this->dirty = array();
     }
   }
   
-  function create() {
-    if ($this->createtime) $this->rs['created_at'] = date(MYSQL_TIME_FORMAT);
-    $id = $this->rs[$this->pkname];
-    parent::create();
-    if ($this->rs[$this->pkname] < 1) $this->rs[$this->pkname] = $id;
+  /**
+   * Getter
+   * @param  key  name of parameter
+   * @return  value of parameter or null
+   */
+  public function __get($key) {
+    if (isset($this->rs[$key])) {
+      return $this->rs[$key];
+    } else {
+      return null;
+    }
   }
   
-  function update() {
-    if ($this->updatetime) $this->rs['updated_at'] = date(MYSQL_TIME_FORMAT);
-    parent::update();
+  /**
+   * Setter
+   * @param  key  name of parameter
+   * @param  val  value of parameter
+   * @return  this instance
+   */
+  public function __set($key, $val) {
+    if (isset($this->rs[$key])) {
+      $this->rs[$key] = $val;
+      $this->dirty[] = $key;
+    }
+    return $this;
   }
   
-  function delete() {
+  /**
+   * Stringifier
+   * @return  dump of internal array
+   */
+  public function __toString() {
+    ob_start();
+    echo get_class($this) . '(Model) - ';
+    var_dump($this->rs);
+    return ob_get_clean();
+  }
+  
+  /**
+   * Creates a new Model based on provided data and saves to database
+   * @param  arr  associative array with Model data
+   * @return  new Model instance with data
+   */
+  static public function create(array $arr) {
+    $Model = new static();
+    $model->load_from_array($arr);
+    return $model->save();
+  }
+  
+  /**
+   * Find a model by index
+   * @param  id  index of the model to be retrieved
+   * @return  new Model instance with data
+   */
+  static public function find($id) {
+    return new static($id);
+  }
+
+  /**
+   * Magic function to pass unknown static calls to the query builder
+   */
+  static public function __callStatic($method, $args) {
+    $static = new static();
+    $qb = new $static->query_builder(get_called_class());
+    return call_user_func_array(array($qb, $method), $args);
+  }
+  
+  /**
+   * Write Model data to database
+   * @param  arr  (optional) associative array with data to be written
+   * @return  this instance
+   */
+  public function save(array $arr = array()) {
+    if (empty($arr)) $arr = $this->rs;
+    if ($this->exists) {
+      if ($this->updatetime) {
+        $this->rs['updated_at'] = $this->makedatetime();
+      }
+      return $this->update_row();
+    } else {
+      if ($this->createtime) {
+        $this->rs['created_at'] = $this->makedatetime();
+      }
+      return $this->insert_row();
+    }
+  }
+  
+  /**
+   * Delete Model
+   * If $this->softdelete == true, this function sets the Model to soft-deleted
+   * @return  true on success
+   */
+  public function delete() {
     if ($this->softdelete) {
-      $this->rs['deleted_at'] = date(MYSQL_TIME_FORMAT);
-      parent::update();
+      $this->rs['deleted_at'] = $this->makedatetime();
+      $this->save();
     } else {
       $this->force_delete();
     }
   }
   
-  function restore() {
-    if ($this->softdelete) {
-      $this->rs['deleted_at'] = 0;
-      parent::update();
+  /**
+   * Force delete Model
+   * Overrides $this->softdelete
+   * @return  true on success
+   */
+  public function force_delete() {
+    if ($this->delete_row()) {
+      $this->exists = false;
+      return true;
+    }
+    return false;
+  }
+  
+  /**
+   * Restore a soft-deleted Model
+   * @return  this instance
+   */
+  public function restore() {
+    if ($this->softdelete && $this->trashed()) {
+      $this->rs['deleted_at'] = '';
+      $this->save();
+    }
+    return $this;
+  }
+  
+  /**
+   * Checks whether the Model is in the database
+   * @return  true if the Model is in the database
+   */
+  public function exists() {
+    return $this->exists;
+  }
+  
+  /**
+   * Checks whether the Model has changed from the database state
+   * @return  true if the Model has been changed
+   */
+  public function dirty() {
+    return !empty($this->dirty);
+  }
+  
+  /**
+   * Checks whether Model has been soft-deleted
+   * @return  true if the Model has been soft-deleted
+   */
+  public function trashed() {
+    return ($this->softdelete && $this->rs['deleted_at']);
+  }
+  
+  static public function pkname() {
+    $static = new static();
+    return $static->pkname;
+  }
+  
+  protected function getdbh() {
+    return call_user_func($this->dbhfnname);
+  }
+  
+  protected function enquote($name) {
+    if ($this->DB_TYPE == 'MYSQL') {
+      return '`' . $name . '`';
+    } else {
+      // Put future databases here
+      return '"' . $name . '"';
     }
   }
   
-  function force_delete() {
-    parent::delete();
-    $this->rs[$this->pkname] = 0;
-  }
-  
-  function exists($checkdb=true) {
-    return (bool)parent::exists($checkdb);
-  }
-  
-  function trashed($checkdb=true) {
-    if (!$this->softdelete) return false;
-    if (!$this->exists(false)) return false;
-    if ($checkdb) {
-      $dbh = $this->getdbh();
-      $sql = "SELECT `deleted_at` FROM " . $this->enquote($this->tablename) . " WHERE " . $this->enquote($this->pkname) . "=?";
-      $stmt = $dbh->prepare($sql);
-      $stmt->bindValue(1, $this->rs[$this->pkname]);
+  protected function makedatetime() {
+    if ($this->DB_TYPE == 'future') {
+      // Put future databases here
+      return 'future';
+    } else {
+      // MySQL format
+      return date('Y-m-d H:i:s');
     }
-    return (isset($this->rs['deleted_at']) && $this->rs['deleted_at'] > 0);
   }
+  
+  protected function load_from_array($arr) {
+    foreach ($arr as $k => $v) {
+      $this->{$k} = $v;
+    }
+    return $this;
+  }
+  
+  static public function execute_query($query) {
+    $static = new static();
+    $dbh = $static->getdbh();
+    // Build query string
+    $sql = 'SELECT * FROM ' . $static->enquote($static->tablename);
+    // Apply where conditions
+    if (count($query->conditions)) {
+      $sql .= ' WHERE ';
+      $first = true;
+      foreach ($query->conditions as $condition) {
+        if ($first) {
+          $first = false;
+        } else {
+          $sql .= ' ' . $condition['and_or'] . ' ';
+        }
+        $sql .= $static->enquote($condition['column']) . ' ' .
+                $condition['operator'];
+        if (is_array($condition['value'])) {
+          $s = str_repeat(', ?', count($condition['value']));
+          $s = substr($s, 2);  // Remove leading comma and space
+          $sql .= ' (' . $s . ')';
+        } else {
+          $sql .= ' ?';
+        }
+      }
+    }
+    // Apply order by
+    if (count($query->order)) {
+      $sql .= ' ORDER BY';
+      $s = '';
+      foreach ($query->order as $order) {
+        $s .= ', ' . $static->enquote($order['column']) . ' ' . $order['dir'];
+      }
+      $sql .= substr($s, 1); // Remove leading comma
+    }
+    // Apply limit on result length
+    if ($query->limit) {
+      $sql .= ' LIMIT ' . $query->limit;
+    }
+    // Prepare statement and bind values
+    $stmt = $dbh->prepare($sql);
+    if (count($query->conditions)) {
+      $i = 0;
+      foreach ($query->conditions as $condition) {
+        $v = $condition['value'];
+        if (is_array($v)) {
+          foreach ($v as $value) {
+            $stmt->bindValue(++$i, is_scalar($value) ? $value :
+              ($static->COMPRESS_ARRAY ? gzdeflate(serialize($value)) :
+                serialize($value)));
+          }
+        } else {
+          $stmt->bindValue(++$i, is_scalar($v) ? $v :
+            ($static->COMPRESS_ARRAY ? gzdeflate(serialize($v)) : serialize($v)));
+        }
+      }
+    }
+    // Get results
+    $stmt->execute();
+    $rs = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $results = array();
+    foreach ($rs as $row) {
+      $results[] = new static($row, true);
+    }
+    // Get relationships
+    /**
+     * NOTE: This only implements belongsTo()
+     */
+    foreach ($query->foreign as $relationship) {
+      $model = $relationship['foreign_model'];
+      $local_index = $relationship['local_index'];
+      $foreign_pkname = $model::pkname();
+      $foreign = $model::where($foreign_pkname , 'IN',
+                               model_column($results, $local_index));
+      foreach ($relationship['child'] as $child) {
+        $foreign->with($child);
+      }
+      $foreign = $foreign->all();
+      foreach ($results as $rrow) {
+        foreach ($foreign as $frow) {
+          if ($frow->$foreign_pkname  == $rrow->{$local_index}) {
+            $rrow->add_foreign($relationship['name'], $frow);
+            continue 2;
+          }
+        }
+        $rrow->add_foreign($relationship['name'], null);
+      }
+    }
+    // Return
+    return $results;
+  }
+  
+  protected function select_row($id) {
+    $dbh = $this->getdbh();
+    $sql = 'SELECT * FROM ' . $this->enquote($this->tablename) . ' WHERE ' .
+           $this->enquote($this->pkname) . '=?';
+    $stmt = $dbh->prepare($sql);
+    $stmt->bindValue(1, (int)$id);
+    $stmt->execute();
+    $rs = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($rs) {
+      foreach ($rs as $key => $val) {
+        if (isset($this->rs[$key])) {
+          $this->rs[$key] = is_scalar($this->rs[$key]) ? $val :
+            (unserialize($this->COMPRESS_ARRAY ? gzinflate($val) : $val));
+        }
+      }
+      $this->exists = true;
+      $this->dirty = array();
+    }
+    return $this;
+  }
+  
+  protected function insert_row() {
+    $dbh = $this->getdbh();
+    $pkname = $this->pkname;
+    $s1 = $s2 = '';
+    foreach ($this->rs as $k => $v) {
+      if ($k != $pkname || $v) {
+        $s1 .= ',' . $this->enquote($k);
+        $s2 .= ',?';
+      }
+    }
+    $s1 = substr($s1, 1); // Remove leading comma
+    $s2 = substr($s2, 1); // Remove leading comma
+    $sql = 'INSERT INTO ' . $this->enquote($this->tablename) . ' (' . $s1 .
+           ') VALUES (' . $s2 . ')';
+    $stmt = $dbh->prepare($sql);
+    $i = 0;
+    foreach ($this->rs as $k => $v) {
+      if ($k != $pkname || $v) {
+        $stmt->bindValue(++$i, is_scalar($v) ? $v :
+          ($this->COMPRESS_ARRAY ? gzdeflate(serialize($v)) : serialize($v)));
+      }
+    }
+    $stmt->execute();
+    if ($stmt->rowCount() == 0) {
+      return false;
+    }
+    $this->rs[$pkname] = $dbh->lastInsertId();
+    $this->exists = true;
+    $this->dirty = array();
+    return $this;
+  }
+  
+  protected function update_row() {
+    $dbh = $this->getdbh();
+    $s = '';
+    foreach ($this->rs as $k => $v) {
+      $s .= ',' . $this->enquote($k) . '=?';
+    }
+    $s = substr($s, 1); // Remove leading comma
+    $sql = 'UPDATE ' . $this->enquote($this->tablename) . ' SET ' . $s . 
+           ' WHERE ' . $this->enquote($this->pkname) . '=?';
+    $stmt = $dbh->prepare($sql);
+    $i = 0;
+    foreach ($this->rs as $k => $v) {
+      $stmt->bindValue(++$i, is_scalar($v) ? $v :
+        ($this->COMPRESS_ARRAY ? gzdeflate(serialize($v)) : serialize($v)));
+    }
+    $stmt->bindValue(++$i, $this->rs[$this->pkname]);
+    $stmt->execute();
+    if ($stmt->rowCount() > 0) {
+      $this->exists = true;
+      $this->dirty = array();
+    }
+    return $this;
+  }
+  
+  protected function delete_row() {
+    $dbh = $this->getdbh();
+    $sql = 'DELETE FROM ' . $this->enquote($this->tablename) . ' WHERE ' .
+           $this->enquote($this->pkname) . '=?';
+    $stmt = $dbh->prepare($sql);
+    $stmt->bindValue(1,$this->rs[$this->pkname]);
+    return $stmt->execute();
+  }
+  
+  protected function add_foreign($name, $foreign) {
+    $this->rs[$name] = $foreign;
+  }
+  
+  static protected function belongsTo($model) {
+    return array("type" => "belongsTo",
+                 "foreign_model" => $model,
+                 "local_index" => strtolower($model) . '_id');
+  }
+}
+
+class QueryBuilder {
+  public $model;
+  public $conditions = array();
+  public $order = array();
+  public $foreign = array();
+  public $limit = false;
+  
+  function __construct($model) {
+    $this->model = $model;
+  }
+  
+  function where($column, $operator, $value, $and_or="AND") {
+    $this->conditions[] = compact("column", "operator", "value", "and_or");
+    return $this;
+  }
+  
+  function orWhere($column, $operator, $value) {
+    return $this->where($column, $operator, $value, "OR");
+  }
+  
+  function orderBy($column, $dir="ASC") {
+    $this->order[] = compact("column", "dir");
+    return $this;
+  }
+  
+  function orderByDesc($column) {
+    return $this->orderBy($column, "DESC");
+  }
+  
+  function orderByAsc($column) {
+    return $this->orderBy($column, "ASC");
+  }
+  
+  function with($name) {
+    $parts = explode('.', $name);
+    if (count($parts) == 1) {
+      $relationship = call_user_func(array($this->model, $name));
+      $relationship['name'] = $name;
+      $relationship['child'] = array();
+      $this->foreign[] = $relationship;
+    } elseif (count($parts) > 1) {
+      $parent = $parts[0];
+      $child = implode('.', array_slice($parts, 1));
+      foreach ($this->foreign as &$foreign) {
+        if ($foreign['name'] == $parent) {
+          $foreign['child'][] = $child;
+        }
+      }
+    }
+    return $this;
+  }
+  
+  function all() {
+    $this->limit = false;
+    return static::execute_query($this);
+  }
+  
+  function get($number=1) {
+    $this->limit = $number;
+    return static::execute_query($this);
+  }
+  
+  static protected function execute_query($query) {
+    $model = $query->model;
+    return $model::execute_query($query);
+  }
+}
+
+function model_column($arr, $column) {
+  $results = array();
+  foreach ($arr as $model) {
+    $results[] = $model->$column;
+  }
+  return $results;
 }
 
 //===============================================================
@@ -207,6 +631,6 @@ class View extends KISS_View {
   }
   
   static function auto($data) {
-    self::output($GLOBALS['controller'], $data);
+    static::output($GLOBALS['controller'], $data);
   }
 }
