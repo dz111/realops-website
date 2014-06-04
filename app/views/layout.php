@@ -114,7 +114,7 @@ if (isset($body)) {
       </div><!-- /.container -->
     </div><!-- /.wrapper -->
     <footer>
-      <p>Website by &copy; David Zhong 2014<br />Photographs curtesy of Sydney Airport Corportation Limited</p>
+      <p>Website by &copy; David Zhong 2014<br />Photographs courtesy of Sydney Airport Corportation Limited</p>
     </footer>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
