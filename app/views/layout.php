@@ -21,9 +21,11 @@ function menu_active($item) {
     <!-- Bootstrap -->
     <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/realops.css">
-<?php if ($menu == 'index') { ?>
+<?php
+if ($menu == 'index') { ?>
     <link rel="stylesheet" href="/css/header.css">
-<?php } ?>
+<?php
+} ?>
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -56,13 +58,15 @@ function menu_active($item) {
             </div><!-- /.navbar-collapse -->
           </div><!-- /.container -->
         </nav>
-  <?php if ($menu == 'index') { ?>
+<?php
+if ($menu == 'index') { ?>
       <div id="realops-calltoaction">
         <a href="<?=Route::link('schedule')?>" class="btn btn-primary btn-lg">Book your flight now!</a>
       </div>
       <div id="realops-background-shade"></div>
       <div id="realops-logo"></div>
-  <?php } ?>
+<?php
+} ?>
       </header>
       <div class="container" id="realops-container">
         <div class="row">
@@ -70,7 +74,15 @@ function menu_active($item) {
             <div class="panel panel-default" id="realops-login-panel">
               <div class="panel-heading">User Control Panel</div>
               <div class="panel-body">
-                <?php include(APP_PATH . "inc/usercontrol.php") ?>
+<?php
+if (isset($_SESSION['id'])) {?>
+                <p>Welcome <?=$_SESSION['name']?></p>
+                <p><a href="<?=Route::link('logout')?>">Logout</a></p>
+<?php
+} else { ?>
+                <p><a href="<?=Route::link('login')?>">Login with VATSIM</a></p>
+<?php
+} ?>
               </div><!-- /.panel-body -->
             </div><!-- /#realops-login-panel -->
             <div class="panel panel-default hidden-xs">
