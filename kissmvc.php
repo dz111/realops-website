@@ -175,7 +175,7 @@ abstract class Model {
    * @return  new Model instance with data
    */
   static public function create(array $arr) {
-    $Model = new static();
+    $model = new static();
     $model->load_from_array($arr);
     return $model->save();
   }
@@ -455,9 +455,8 @@ abstract class Model {
     if ($stmt->rowCount() == 0) {
       return false;
     }
-    $this->rs[$pkname] = $dbh->lastInsertId();
-    $this->exists = true;
-    $this->dirty = array();
+    $id = $this->rs[$pkname] ? $this->rs[$pkname] : $dbh->lastInsertId();
+    $this->select_row($id);
     return $this;
   }
   
@@ -592,12 +591,12 @@ class Controller extends KISS_Controller {
   }
   
   function match_route_table() {
-    $uri = $_SERVER['REQUEST_URI'];
+    $uri = $this->get_req_uri();
+    if ($uri === false) $this->request_not_found("Outside application path");
     $verb = strtoupper($_SERVER['REQUEST_METHOD']);
     $match = Route::do_route($uri, $verb);
-    if (!$match) $this->request_not_found();
+    if (!$match) $this->request_not_found($this->make_error_message());
     $this->params = $match['params'];
-    // $match['action'] actually holds the controller name too
     $GLOBALS['controller'] = $match['controller'];
     $controller_parts = explode('/', $match['controller']);
     $this->controller = $controller_parts[0];
@@ -606,15 +605,72 @@ class Controller extends KISS_Controller {
   }
   
   function add_cgi_params() {
-    $this->params = array_merge($this->params, $_REQUEST);
+    $this->params = array_merge($this->params, $_GET);
     return $this;
   }
   
-  function request_not_found($err='') {
-    $data['err'] = $err;
-    header("HTTP/1.1 404 Not found");
-    View::output("main/404", $data);
-    die();
+  function route_request() {
+    $this->load_controller();
+    $this->call_action();
+    return $this;
+  }
+  
+  function get_req_uri() {
+    $uri = $_SERVER['REQUEST_URI'];
+    if ($this->web_folder) {
+      if (strpos($uri, $this->web_folder) === 0) {
+        // Remove application root path
+        $uri = substr($uri, strlen($this->web_folder));
+      } else {
+        return false;
+      }
+    }
+    if (!$uri) {
+      $uri = '/';  // Put root slash if string is empty
+    }
+    return $uri;
+  }
+  
+  function load_controller() {
+    $controllerfile = $this->controller_path . $this->controller . '/' .
+                      $this->action . '.php';
+    if (!preg_match('#^[A-Za-z0-9_-]+$#', $this->controller) ||
+          !file_exists($controllerfile)) {
+      $this->request_not_found('Controller file not found' . $controllerfile);
+    }
+    require($controllerfile);
+  }
+  
+  function call_action() {
+    $function = '_' . $this->action;
+    if (!preg_match('#^[A-Za-z_][A-Za-z0-9_-]*$#', $function) ||
+          !function_exists($function)) {
+      $this->request_not_found('Function not found: '.$function);
+    }
+    $reflect = new ReflectionFunction($function);
+    $params = array();
+    foreach ($reflect->getParameters() as $param) {
+      if (isset($this->params[$param->getName()])) {
+        $params[] = $this->params[$param->getName()];
+      } elseif ($param->isDefaultValueAvailable()) {
+        $params[] = $param->getDefaultValue();
+      } else {
+        $params[] = null;
+      }
+    }
+    call_user_func_array($function, $params);
+  }
+  
+  function make_error_message() {
+    $msg = 'No route found for ' . $this->get_req_uri();
+    if ($this->web_folder) {
+      $msg .= ' with root folder "' . $this->web_folder . '"';
+    }
+    return $msg;
+  }
+  
+  function request_not_found($msg='') {
+    util::not_found($msg);
   }
 }
 
