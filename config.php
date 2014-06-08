@@ -18,3 +18,10 @@ define('SQL_HOST', '');
 define('SQL_DATABASE', '');
 define('SQL_USER', '');
 define('SQL_PASSWORD', '');
+
+//===============================================
+// Authentication
+//===============================================
+define('AUTH_PROVIDER', '');
+define('AUTH_KEY', '');
+define('AUTH_SECRET', '');

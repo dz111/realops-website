@@ -75,12 +75,13 @@ if (isset($menu) && $menu == 'index') { ?>
               <div class="panel-heading">User Control Panel</div>
               <div class="panel-body">
 <?php
-if (isset($_SESSION['id'])) {?>
-                <p>Welcome <?=$_SESSION['name']?></p>
-                <p><a href="<?=Route::link('logout')?>">Logout</a></p>
+if (Auth::check()) {?>
+                <p>Welcome, <?=Auth::user()->name?></p>
+                <p><a href="<?=Route::link('schedule/user')?>">My flights</a></p>
+                <p><a href="<?=Route::link('logout')?>?return_url=<?=util::current_url_enc()?>">Logout</a></p>
 <?php
 } else { ?>
-                <p><a href="<?=Route::link('login')?>">Login with VATSIM</a></p>
+                <p><a href="<?=Route::link('login')?>?return_url=<?=util::current_url_enc()?>">Login with VATSIM</a></p>
 <?php
 } ?>
               </div><!-- /.panel-body -->
@@ -89,7 +90,7 @@ if (isset($_SESSION['id'])) {?>
               <div class="panel-heading">Quick links</div>
               <div class="panel-body">
                 <ul class="list-unstyled">
-                  <li><a href="<?=Route::link('schedules')?>">Flight schedules</a></li>
+                  <li><a href="<?=Route::link('schedule')?>">Flight schedules</a></li>
                   <li><a href="<?=Route::link('pilots')?>">Pilot briefing</a></li>
                   <li><a href="#" target="_blank">Discussion forum</a></li>
                   <li><a href="http://www.vatsim.net/fp/" target="_blank">Flight plan submission</a></li>
