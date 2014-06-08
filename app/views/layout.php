@@ -22,7 +22,7 @@ function menu_active($item) {
     <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/realops.css">
 <?php
-if ($menu == 'index') { ?>
+if (isset($menu) && $menu == 'index') { ?>
     <link rel="stylesheet" href="/css/header.css">
 <?php
 } ?>
@@ -59,7 +59,7 @@ if ($menu == 'index') { ?>
           </div><!-- /.container -->
         </nav>
 <?php
-if ($menu == 'index') { ?>
+if (isset($menu) && $menu == 'index') { ?>
       <div id="realops-calltoaction">
         <a href="<?=Route::link('schedule')?>" class="btn btn-primary btn-lg">Book your flight now!</a>
       </div>

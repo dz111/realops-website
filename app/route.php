@@ -18,5 +18,3 @@ Route::post('/atc', 'atc/submit');
 
 Route::get('/contact', 'contact/form', 'contact');
 Route::post('/contact', 'contact/submit');
-
-?>
