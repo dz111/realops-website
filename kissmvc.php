@@ -4,10 +4,10 @@ require('kissmvc_core.php');
 //===============================================================
 // Routing table
 //===============================================================
-class Route {
+final class Route {
   static protected $table = array();
   
-  static function match($verbs, $route, $controller, $name='') {
+  static function match($verbs, $route, $controller, $name='', $maint=false) {
     $request_uri_parts = $route ? explode('/', $route) : array();
     if (!is_array($verbs)) {
       $verbs = array($verbs);
@@ -17,20 +17,21 @@ class Route {
                              'uri_parts' => $request_uri_parts,
                              'controller' => $controller,
                              'name' => $name,
-                             'route' => $route);
+                             'route' => $route,
+                             'maint' => $maint);
     }
   }
   
-  static function get($route, $controller, $name='') {
-    Route::match('GET', $route, $controller, $name);
+  static function get($route, $controller, $name='', $maint=false) {
+    Route::match('GET', $route, $controller, $name, $maint);
   }
   
-  static function post($route, $controller, $name='') {
-    Route::match('POST', $route, $controller, $name);
+  static function post($route, $controller, $name='', $maint=false) {
+    Route::match('POST', $route, $controller, $name, $maint);
   }
   
-  static function any($route, $controller, $name='') {
-    Route::match('*', $route, $controller, $name);
+  static function any($route, $controller, $name='', $maint=false) {
+    Route::match('*', $route, $controller, $name, $maint);
   }
   
   static function do_route($uri, $verb) {
@@ -56,7 +57,8 @@ class Route {
       return array('uri' => $uri,
                    'verb' => $verb,
                    'params' => $params,
-                   'controller' => $row['controller']);
+                   'controller' => $row['controller'],
+                   'maint' => $row['maint']);
     }
     // Didn't match - 404!
     return false;
@@ -596,6 +598,7 @@ class Controller extends KISS_Controller {
     $verb = strtoupper($_SERVER['REQUEST_METHOD']);
     $match = Route::do_route($uri, $verb);
     if (!$match) $this->request_not_found($this->make_error_message());
+    if (MAINT_MODE && !$match['maint']) util::service_unavailable();
     $this->params = $match['params'];
     $GLOBALS['controller'] = $match['controller'];
     $controller_parts = explode('/', $match['controller']);
@@ -678,7 +681,7 @@ class Controller extends KISS_Controller {
 // View
 //===============================================================
 class View extends KISS_View {
-  static function output($view, $data) {
+  static function output($view, $data=array()) {
     $data['view'] = $view;
     if ($view) {
       $data['body'][] = View::do_fetch(APP_PATH . "views/" . $view . '.php', $data);
@@ -686,7 +689,7 @@ class View extends KISS_View {
     View::do_dump(APP_PATH . "views/layout.php", $data);
   }
   
-  static function auto($data) {
+  static function auto($data=array()) {
     static::output($GLOBALS['controller'], $data);
   }
 }

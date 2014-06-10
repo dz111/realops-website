@@ -1,13 +1,19 @@
 <?php
 //===============================================
+// Website on/off
+//===============================================
+define('MAINT_MODE', true);
+
+//===============================================
 // Debug
 //===============================================
-define('DEBUG', true);
+define('DEBUG', false);
 
 //===============================================
 // Website options
 //===============================================
 define('APP_PATH','app/'); //with trailing slash
+define('ADMIN_PATH', '/admin');  // with leading slash
 define('WEB_FOLDER',''); //with leading slash
 define('SITENAME', 'RealOps Sydney 2014 - VATSIM Australia Pacific');
 

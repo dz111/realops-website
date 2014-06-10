@@ -18,6 +18,11 @@ class util {
     die();
   }
   
+  static public function service_unavailable() {
+    View::output("errors/service-unavailable");
+    die();
+  }
+  
   static public function current_url() {
     $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS']) ?
                   'https' : 'http';
