@@ -64,10 +64,18 @@ final class Route {
     return false;
   }
   
-  static function link($name) {
+  static function link($name, $params=array()) {
     foreach (static::$table as $row) {
       if ($row['name'] == $name) {
-        return WEB_FOLDER . $row['route'];
+        $uri_parts = explode('/', $row['route']);
+        foreach ($uri_parts as &$part) {
+          if (substr($part, 0, 1) == '{' &&
+              substr($part, -1, 1) == '}') {
+            $param_name = substr($part, 1, -1);
+            $part = $params[$param_name];
+          }
+        }
+        return htmlspecialchars(WEB_FOLDER . implode('/', $uri_parts));
       }
     }
   }
@@ -339,7 +347,7 @@ abstract class Model {
           $s = str_repeat(', ?', count($condition['value']));
           $s = substr($s, 2);  // Remove leading comma and space
           $sql .= ' (' . $s . ')';
-        } else {
+        } elseif ($condition['value']) {
           $sql .= ' ?';
         }
       }
@@ -363,6 +371,7 @@ abstract class Model {
       $i = 0;
       foreach ($query->conditions as $condition) {
         $v = $condition['value'];
+        if (!$v) continue;
         if (is_array($v)) {
           foreach ($v as $value) {
             $stmt->bindValue(++$i, is_scalar($value) ? $value :
@@ -517,12 +526,12 @@ class QueryBuilder {
     $this->model = $model;
   }
   
-  function where($column, $operator, $value, $and_or="AND") {
+  function where($column, $operator, $value=false, $and_or="AND") {
     $this->conditions[] = compact("column", "operator", "value", "and_or");
     return $this;
   }
   
-  function orWhere($column, $operator, $value) {
+  function orWhere($column, $operator, $value=false) {
     return $this->where($column, $operator, $value, "OR");
   }
   

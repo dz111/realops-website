@@ -15,7 +15,7 @@ To do
 -----
 
 * Fix container sizing
-* Schedule page
+* Floating header row for flight schedule
 * Schedule page for small screens
 * View flight pages
 * My flights page
