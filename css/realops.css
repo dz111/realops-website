@@ -32,8 +32,9 @@ footer {
   vertical-align: middle;
 }
 
-#realops-flight-schedule * {
+#realops-flight-schedule a {
   color: inherit;
+  text-decoration: none;
 }
 
 #realops-flight-schedule th.realops-sort-asc::after {

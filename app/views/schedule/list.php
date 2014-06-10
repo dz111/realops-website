@@ -94,7 +94,7 @@ foreach ($flights as $flight) { ?>
         <?=$flight->user->name?>
 <?php
   } else { ?>
-        Available
+        <button type="button" class="btn btn-primary btn-xs">Book</button>
 <?php
   } ?></a>
       </td>
