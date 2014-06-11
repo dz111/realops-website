@@ -34,6 +34,27 @@ if (isset($menu) && $menu == 'index') { ?>
     <![endif]-->
   </head>
   <body>
+    <div class="modal fade" id="realops-login-info" tabindex="-1" role="dialog" aria-labelledby="realops-login-info-label" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="realops-login-info-label">Login with VATSIM SSO</h4>
+          </div>
+          <div class="modal-body">
+            <p><strong>You are about to be redirected to the VATSIM Single Sign On service to login.</strong></p>
+            <p>The VATSIM Single Sign On service allows you to log into the RealOps Sydney event website without having to fill out a registration form.</p>
+            <p>We will <strong>not</strong> have access to your VATSIM password.</p>
+            <p>Once you log in, we will have one-time access to some information about you, including your name, email address and some publicly-available VATSIM-related information such as your ATC rating. We will use this information for the purpose of administering this event and promoting future runnings of this event. This information will be removed from our servers by December 2015.</p>
+            <p><strong>New to VATSIM?</strong> <a href="http://www.vatsim.net/about-vatsim/members/joinvatsim/">Sign up today!</a></p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            <a href="<?=Route::link('login')?>" type="button" class="btn btn-primary">Continue to VATSIM SSO</a>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="wrapper">
       <header>
         <nav class="navbar navbar-default navbar-static-top navbar-inverse" role="navigation">
@@ -81,7 +102,9 @@ if (Auth::check()) {?>
                 <p><a href="<?=Route::link('logout')?>?return_url=<?=util::current_url_enc()?>">Logout</a></p>
 <?php
 } else { ?>
-                <p><a href="<?=Route::link('login')?>?return_url=<?=util::current_url_enc()?>">Login with VATSIM</a></p>
+                <p><a href="<?=Route::link('login')?>" data-toggle="modal" data-target="#realops-login-info">
+                  Login with VATSIM
+                </a></p>
 <?php
 } ?>
               </div><!-- /.panel-body -->
