@@ -30,6 +30,14 @@ final class Route {
     Route::match('POST', $route, $controller, $name, $maint);
   }
   
+  static function put($route, $controller, $name='', $maint=false) {
+    Route::match('PUT', $route, $controller, $name, $maint);
+  }
+  
+  static function delete($route, $controller, $name='', $maint=false) {
+    Route::match('DELETE', $route, $controller, $name, $maint);
+  }
+  
   static function any($route, $controller, $name='', $maint=false) {
     Route::match('*', $route, $controller, $name, $maint);
   }
@@ -38,7 +46,7 @@ final class Route {
     $uri = $uri ? explode('?', $uri)[0] : '';
     $request_uri_parts = $uri ? explode('/', $uri) : array();
     $params = array();
-    foreach (static::$table as $row) {
+    foreach (static::$table as $row) { 
       if ($row['verb'] != $verb && $row['verb'] != '*') continue;
       if (count($row['uri_parts']) != count($request_uri_parts)) continue;
       for ($i = 0, $count = count($row['uri_parts']); $i < $count; ++$i) {
@@ -98,6 +106,7 @@ abstract class Model {
   protected $query_builder = "QueryBuilder";
   
   protected $rs = array();
+  protected $foreign = array();
   protected $exists = false;
   protected $dirty = array();
   
@@ -147,8 +156,10 @@ abstract class Model {
    * @return  value of parameter or null
    */
   public function __get($key) {
-    if (isset($this->rs[$key])) {
+    if (array_key_exists($key, $this->rs)) {
       return $this->rs[$key];
+    } elseif (array_key_exists($key, $this->foreign)) {
+      return $this->foreign[$key];
     } else {
       return null;
     }
@@ -161,7 +172,8 @@ abstract class Model {
    * @return  this instance
    */
   public function __set($key, $val) {
-    if (isset($this->rs[$key])) {
+    //if (isset($this->rs[$key])) {
+    if (array_key_exists($key, $this->rs)) {
       $this->rs[$key] = $val;
       $this->dirty[] = $key;
     }
@@ -374,13 +386,10 @@ abstract class Model {
         if (!$v) continue;
         if (is_array($v)) {
           foreach ($v as $value) {
-            $stmt->bindValue(++$i, is_scalar($value) ? $value :
-              ($static->COMPRESS_ARRAY ? gzdeflate(serialize($value)) :
-                serialize($value)));
+            $stmt->bindValue(++$i, $value);
           }
         } else {
-          $stmt->bindValue(++$i, is_scalar($v) ? $v :
-            ($static->COMPRESS_ARRAY ? gzdeflate(serialize($v)) : serialize($v)));
+          $stmt->bindValue(++$i, $v);
         }
       }
     }
@@ -430,8 +439,7 @@ abstract class Model {
     if ($rs) {
       foreach ($rs as $key => $val) {
         if (isset($this->rs[$key])) {
-          $this->rs[$key] = is_scalar($this->rs[$key]) ? $val :
-            (unserialize($this->COMPRESS_ARRAY ? gzinflate($val) : $val));
+          $this->rs[$key] = $val;
         }
       }
       $this->exists = true;
@@ -458,8 +466,7 @@ abstract class Model {
     $i = 0;
     foreach ($this->rs as $k => $v) {
       if ($k != $pkname || $v) {
-        $stmt->bindValue(++$i, is_scalar($v) ? $v :
-          ($this->COMPRESS_ARRAY ? gzdeflate(serialize($v)) : serialize($v)));
+        $stmt->bindValue(++$i, $v);
       }
     }
     $stmt->execute();
@@ -483,8 +490,7 @@ abstract class Model {
     $stmt = $dbh->prepare($sql);
     $i = 0;
     foreach ($this->rs as $k => $v) {
-      $stmt->bindValue(++$i, is_scalar($v) ? $v :
-        ($this->COMPRESS_ARRAY ? gzdeflate(serialize($v)) : serialize($v)));
+      $stmt->bindValue(++$i, $v);
     }
     $stmt->bindValue(++$i, $this->rs[$this->pkname]);
     $stmt->execute();
@@ -505,7 +511,7 @@ abstract class Model {
   }
   
   protected function add_foreign($name, $foreign) {
-    $this->rs[$name] = $foreign;
+    $this->foreign[$name] = $foreign;
   }
   
   static protected function belongsTo($model) {
@@ -604,9 +610,10 @@ class Controller extends KISS_Controller {
   function match_route_table() {
     $uri = $this->get_req_uri();
     if ($uri === false) $this->request_not_found("Outside application path");
-    $verb = strtoupper($_SERVER['REQUEST_METHOD']);
+    $verb = isset($_POST['_method']) ? strtoupper($_POST['_method']) :
+              strtoupper($_SERVER['REQUEST_METHOD']);
     $match = Route::do_route($uri, $verb);
-    if (!$match) $this->request_not_found($this->make_error_message());
+    if (!$match) $this->request_not_found($this->make_error_message($verb));
     if (MAINT_MODE && !$match['maint']) util::service_unavailable();
     $this->params = $match['params'];
     $GLOBALS['controller'] = $match['controller'];
@@ -673,11 +680,12 @@ class Controller extends KISS_Controller {
     call_user_func_array($function, $params);
   }
   
-  function make_error_message() {
+  function make_error_message($verb) {
     $msg = 'No route found for ' . $this->get_req_uri();
     if ($this->web_folder) {
       $msg .= ' with root folder "' . $this->web_folder . '"';
     }
+    $msg .= ' using ' . $verb . ' method.';
     return $msg;
   }
   
