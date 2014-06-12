@@ -50,7 +50,7 @@ if (isset($menu) && $menu == 'index') { ?>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-            <a href="<?=Route::link('login')?>" type="button" class="btn btn-primary">Continue to VATSIM SSO</a>
+            <a href="<?=Route::link('login')?>?return_url=<?=util::current_url_enc()?>" type="button" class="btn btn-primary">Continue to VATSIM SSO</a>
           </div>
         </div>
       </div>
@@ -102,7 +102,7 @@ if (Auth::check()) {?>
                 <p><a href="<?=Route::link('logout')?>?return_url=<?=util::current_url_enc()?>">Logout</a></p>
 <?php
 } else { ?>
-                <p><a href="<?=Route::link('login')?>" data-toggle="modal" data-target="#realops-login-info">
+                <p><a href="<?=Route::link('login')?>?return_url=<?=util::current_url_enc()?>" data-toggle="modal" data-target="#realops-login-info">
                   Login with VATSIM
                 </a></p>
 <?php

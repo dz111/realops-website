@@ -17,7 +17,6 @@ To do
 * Fix container sizing
 * Floating header row for flight schedule
 * Schedule page for small screens
-* View flight pages
 * My flights page
 * Contact us form
 * ATC rego form

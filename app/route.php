@@ -9,6 +9,8 @@ Route::get('/auth/callback', 'auth/callback', 'auth/callback', true);
 Route::get('/schedule', 'schedule/list', 'schedule');
 Route::get('/schedule/my', 'schedule/user', 'schedule/user');
 Route::get('/schedule/{flightid}', 'schedule/view', 'schedule/view');
+Route::post('/schedule/{flightid}', 'schedule/book');
+Route::delete('/schedule/{flightid}', 'schedule/unbook');
 
 Route::get('/pilots', 'main/pilots', 'pilots');
 Route::get('/charts', 'main/charts', 'charts');

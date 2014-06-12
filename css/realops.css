@@ -27,6 +27,17 @@ footer {
   font-size: 12px;
 }
 
+.realops-message {
+  padding: 12px;
+}
+
+#realops-body {
+  margin-left: 15px;
+  margin-right: 15px;
+  min-height: 400px;
+  padding: 30px 50px;
+}
+
 #realops-flight-schedule td, #realops-flight-schedule th {
   text-align: center;
   vertical-align: middle;
@@ -45,9 +56,19 @@ footer {
   content: "\25B2";
 }
 
-#realops-body {
-  margin-left: 15px;
-  margin-right: 15px;
-  min-height: 400px;
-  padding: 30px 50px;
+#realops-flight-view {
+  text-align: center;
+  vertical-align: top;
+  margin-bottom: 15px;
 }
+
+#realops-flight-view tfoot {
+  text-align: left;
+}
+
+#realops-flight-view td {
+  border-top: none;
+  border-bottom: dashed 1px #666666;
+}
+
+
