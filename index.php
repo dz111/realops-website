@@ -20,7 +20,7 @@ require(APP_PATH . 'route.php');
 require(APP_PATH . 'auth.php');
 
 // Session
-$cookie_path = APP_PATH ? APP_PATH : '/';
+$cookie_path = WEB_FOLDER ? WEB_FOLDER : '/';
 session_set_cookie_params(0, $cookie_path, $_SERVER['HTTP_HOST'], false, true);
 session_start();
 
