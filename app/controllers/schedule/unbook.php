@@ -1,6 +1,4 @@
 <?php
-require("common.php");
-
 function _unbook($flightid) {
   if (!Auth::check()) util::redirect(util::current_url());
   $flight = get_flight($flightid);

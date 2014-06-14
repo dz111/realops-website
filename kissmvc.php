@@ -630,6 +630,7 @@ class Controller extends KISS_Controller {
   
   function route_request() {
     $this->load_controller();
+    $this->load_common();
     $this->call_action();
     return $this;
   }
@@ -658,6 +659,13 @@ class Controller extends KISS_Controller {
       $this->request_not_found('Controller file not found' . $controllerfile);
     }
     require($controllerfile);
+  }
+  
+  function load_common() {
+    $commonfile = $this->controller_path . $this->controller . '/common.php';
+    if (file_exists($commonfile)) {
+      require($commonfile);
+    }
   }
   
   function call_action() {
