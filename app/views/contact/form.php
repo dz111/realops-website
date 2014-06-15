@@ -10,6 +10,8 @@ function selected($item) {
 }
 ?>
 <h1>Contact Us</h1>
+<p>This page will be available soon. Until further notice, please direct all enquiries via the <a href="http://vatpac.org/forums">VATPAC forums</a>.</p>
+<?php /*
 <form action="/contact" method="post" role="form">
   <div class="form-group">
     <label for="contact_addressee">Type of enquiry</label>
@@ -28,3 +30,4 @@ function selected($item) {
   </div>
   <button type="submit" class="btn btn-default">Send</button>
 </form>
+*/

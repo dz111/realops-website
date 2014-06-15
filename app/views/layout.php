@@ -115,7 +115,7 @@ if (Auth::check()) {?>
                 <ul class="list-unstyled">
                   <li><a href="<?=Route::link('schedule')?>">Flight schedules</a></li>
                   <li><a href="<?=Route::link('pilots')?>">Pilot briefing</a></li>
-                  <li><a href="#" target="_blank">Discussion forum</a></li>
+                  <li><a href="http://vatpac.org/forums/showthread.php?16113-RealOps-Sydney-2014" target="_blank">Discussion forum</a></li>
                   <li><a href="http://www.vatsim.net/fp/" target="_blank">Flight plan submission</a></li>
                 </ul>
               </div><!-- /.panel-body -->

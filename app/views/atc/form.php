@@ -1,4 +1,2 @@
-<h1>ATC Information</h1>
-<p>Stuff goes here...</p>
-<p><?=$user->id?> <?=$user->name?> <?=$user->email?></p>
-<pre><?php var_dump($user->rs); ?></pre>
+<h1>ATC Information and Registration</h1>
+<p>Watch this space for more information...</p>
