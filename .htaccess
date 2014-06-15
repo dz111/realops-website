@@ -28,3 +28,8 @@ RewriteRule ^(.*)$ index.php/$1 [L]
     Order Allow,Deny
     Allow from all
 </Files>
+
+<Files generate_tables.php>
+    Order Allow,Deny
+    Allow from all
+</Files>
