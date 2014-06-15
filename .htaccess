@@ -23,3 +23,8 @@ RewriteRule ^(.*)$ index.php/$1 [L]
     Order Allow,Deny
     Allow from all
 </Files>
+
+<Files make_me_an_admin.php>
+    Order Allow,Deny
+    Allow from all
+</Files>
