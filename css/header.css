@@ -1,0 +1,84 @@
+header {
+  min-height: 850px !important;
+  background-image: url("../background.php");
+  background-size: auto 800px;
+  background-position: center 50px;
+  background-repeat: no-repeat;
+  position: relative;
+  z-index: 0;
+}
+
+#realops-logo {
+  position: absolute;
+  background-image: url("../img/logo.png");
+  width: 800px;
+  height: 180px;
+  top: 500px;
+  left: 50px;
+  z-index: 2;
+}
+
+#realops-calltoaction {
+  position: absolute;
+  z-index: 2;
+  top: 680px;
+  left: 75px;
+}
+
+@media (min-width: 1200px)  {
+  header {
+    background-size: cover;
+  }
+}
+
+@media (max-width: 870px) {
+  header {
+    min-height: 562px !important;
+    background-size: auto 700px;
+  }
+  
+  #realops-logo {
+    background-image: url("../img/logo-small.png");
+    width: 400px;
+    height: 90px;
+    top: 300px;
+    left: 20px;
+  }
+  
+  #realops-calltoaction {
+    top: 400px;
+    left: 30px;
+  }
+}
+
+@media (max-width: 440px) {
+  #realops-logo {
+    background-image: url("../img/logo-tiny.png");
+    width: 250px;
+    height: 56px;
+    top: 330px;
+  }
+  
+  #realops-calltoaction {
+    top: 400px;
+    left: 30px;
+  }
+}
+
+#realops-background-shade {
+  background-color: rgba(0, 0, 0, 0.3);
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0px;
+  z-index: 1;
+}
+
+#realops-container {
+  top: -100px;
+  position: relative;
+}
+
+#realops-body {
+  margin-bottom: 0px;
+}

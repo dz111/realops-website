@@ -1,0 +1,96 @@
+html, body {
+  height: 100%;
+}
+
+body {
+  background-color: #eeeeee;
+}
+
+h1 {
+  margin-bottom: 20px;
+}
+
+.wrapper {
+  min-height: 100%;
+  height: auto !important;
+  height: 100%;
+  margin: 0 auto -50px; /* Third value = negative footer height */
+}
+
+footer {
+  height: 50px; /* Must match with .wrapper */
+  background-color: black;
+  color: #aaaaaa;
+  width: 100%;
+  padding: 4px;
+  text-align: center;
+  font-size: 12px;
+}
+
+#realops-quick-stats>div {
+  padding: 1rem;
+}
+
+#realops-quick-stats .realops-quick-info {
+  padding: 1.3rem 0 0 1rem;
+  font-size: 2rem;
+  display: inline;
+}
+
+.icon {
+  width: 5rem;
+  height: 5rem;
+  line-height: 4.5rem;
+  font-size: 2rem;
+  text-align: center;
+  border-radius: 50%;
+  border: 3px solid #bbbbbb;
+  color: #bbbbbb;
+}
+
+table.table {
+  margin-bottom: 20px !important;
+}
+
+.realops-message {
+  padding: 12px;
+}
+
+#realops-body {
+  margin-left: 15px;
+  margin-right: 15px;
+  margin-bottom: 80px;
+  padding: 30px 50px;
+}
+
+#realops-flight-schedule td, #realops-flight-schedule th {
+  text-align: center;
+  vertical-align: middle;
+}
+
+#realops-flight-schedule a {
+  color: inherit;
+  text-decoration: none;
+}
+
+#realops-flight-schedule th.realops-sort-asc::after {
+  content: "\25BC";
+}
+
+#realops-flight-schedule th.realops-sort-desc::after {
+  content: "\25B2";
+}
+
+#realops-flight-view {
+  text-align: center;
+  vertical-align: top;
+}
+
+#realops-flight-view tfoot {
+  text-align: left;
+}
+
+#realops-flight-view td {
+  border-top: none;
+  border-bottom: dashed 1px #666666;
+}
