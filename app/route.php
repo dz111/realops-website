@@ -22,3 +22,5 @@ Route::get('/contact', 'contact/form', 'contact');
 Route::post('/contact', 'contact/submit', 'contact/submit');
 
 Route::get(ADMIN_PATH, 'admin/index', 'admin', true);
+Route::get(ADMIN_PATH . '/insertmass', 'admin/insertmass', 'admin/insertmass', true);
+Route::post(ADMIN_PATH . '/insertmass', 'admin/doinsertmass', '', true);
