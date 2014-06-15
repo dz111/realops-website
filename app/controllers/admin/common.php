@@ -45,3 +45,19 @@ function check_flight($flight) {
   }
   return $result;
 }
+
+function save_flight($flight) {
+  if ($flight["sta"] < $flight["std"]) {
+    $flight["sta"] += 24 * 60 * 60;  // Add 24 hours if sta < std
+  }
+  $flight["std"] = date('Y-m-d H:i:s', $flight["std"]);
+  $flight["sta"] = date('Y-m-d H:i:s', $flight["sta"]);
+  $flight["user_id"] = null;
+  $fm = new Flight($flight);
+  $fm->save();
+  if ($fm && $fm->exists()) {
+    return '';
+  } else {
+    return 'Failed to save';
+  }
+}

@@ -16,11 +16,11 @@ if (isset($success)) { ?>
     <tr>
       <td><strong>Departing</strong><br />
             <?=$flight->adep?><br />
-            <?=gmdate('H:i', strtotime($flight->std))?> UTC
+            <?=date('H:i', strtotime($flight->std))?> UTC
         </td>
         <td><strong>Arriving</strong><br />
             <?=$flight->ades?><br />
-            <?=gmdate('H:i', strtotime($flight->std))?> UTC
+            <?=date('H:i', strtotime($flight->sta))?> UTC
         </td>
     </tr>
   </tbody>

@@ -1,4 +1,4 @@
-<h1>Input check</h1>
+<h1>Function: <?=$action?></h1>
 <p><strong>Result: <?=$passes?> / <?=$flights?></strong></p>
 <table class="table table-condensed">
   <thead>
