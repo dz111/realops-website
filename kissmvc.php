@@ -614,7 +614,10 @@ class Controller extends KISS_Controller {
               strtoupper($_SERVER['REQUEST_METHOD']);
     $match = Route::do_route($uri, $verb);
     if (!$match) $this->request_not_found($this->make_error_message($verb));
-    if (MAINT_MODE && !$match['maint']) util::service_unavailable();
+    if (MAINT_MODE && !$match['maint'] &&
+         (!Auth::check() || Auth::user()->admin)) {
+      util::service_unavailable();
+    }
     $this->params = $match['params'];
     $GLOBALS['controller'] = $match['controller'];
     $controller_parts = explode('/', $match['controller']);
