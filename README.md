@@ -14,7 +14,6 @@ Production: http://realops.vatpac.org
 To do
 -----
 
-* Fix container sizing
 * Floating header row for flight schedule
 * Schedule page for small screens
 * Contact us form

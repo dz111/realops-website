@@ -78,3 +78,7 @@ header {
   top: -100px;
   position: relative;
 }
+
+#realops-body {
+  margin-bottom: 0px;
+}
