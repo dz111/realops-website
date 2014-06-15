@@ -3,3 +3,23 @@ RewriteBase /
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ index.php/$1 [L]
+
+<Files *.php>
+    Order Deny,Allow
+    Deny from all
+</Files>
+
+<Files README.md>
+    Order Deny,Allow
+    Deny from all
+</Files>
+
+<Files index.php>
+    Order Allow,Deny
+    Allow from all
+</Files>
+
+<Files background.php>
+    Order Allow,Deny
+    Allow from all
+</Files>
