@@ -27,6 +27,27 @@ footer {
   font-size: 12px;
 }
 
+#realops-quick-stats>div {
+  padding: 1rem;
+}
+
+#realops-quick-stats .realops-quick-info {
+  padding: 1.3rem 0 0 1rem;
+  font-size: 2rem;
+  display: inline;
+}
+
+.icon {
+  width: 5rem;
+  height: 5rem;
+  line-height: 4.5rem;
+  font-size: 2rem;
+  text-align: center;
+  border-radius: 50%;
+  border: 3px solid #bbbbbb;
+  color: #bbbbbb;
+}
+
 table.table {
   margin-bottom: 20px !important;
 }
@@ -73,5 +94,3 @@ table.table {
   border-top: none;
   border-bottom: dashed 1px #666666;
 }
-
-

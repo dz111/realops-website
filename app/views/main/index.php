@@ -1,8 +1,29 @@
 <h1>RealOps Sydney 2014</h1>
-<h2>5 July 2014</h2>
-<div id="realops-quick-stats"></div>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam non eros euismod, tempor metus id, ultricies turpis. Morbi euismod, dolor eget dapibus mollis, lorem augue scelerisque velit, id blandit ligula diam ac enim. Praesent non posuere orci. Mauris dapibus non leo eu gravida. Sed scelerisque turpis vel tempor condimentum. Integer a dolor et tellus porttitor vulputate vel id diam. Vestibulum diam leo, elementum vitae tellus quis, iaculis mollis nulla. Aenean sagittis augue sit amet diam ultricies, et venenatis ipsum varius. Nam eget enim nisi. Duis est ipsum, elementum convallis ultricies at, dignissim eu leo. Fusce eu eros purus. Morbi ornare eros lectus, et tempor tellus aliquam eget. Ut eu facilisis dui, id viverra quam. Sed ultrices sem non nisi condimentum tincidunt. Aenean vestibulum felis placerat, feugiat mi id, semper elit.</p>
-<p>Duis nec luctus nibh. Nunc metus urna, porttitor pretium velit suscipit, tincidunt tincidunt est. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; In ornare, ante sed placerat dictum, eros lacus molestie diam, sit amet ornare diam sapien eget libero. Pellentesque porta, risus sed vulputate suscipit, mi tortor tempus purus, vel blandit ligula est in tellus. Maecenas lorem sem, malesuada sed convallis eget, viverra in tellus. Ut id sollicitudin lacus, ac rutrum mi. Aenean luctus tellus nec metus fermentum vehicula. Mauris felis sapien, rutrum eget iaculis at, mollis vitae nunc.</p>
-<p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Etiam ut rhoncus lorem, eu volutpat mi. Interdum et malesuada fames ac ante ipsum primis in faucibus. Donec tristique, diam porttitor rutrum ultricies, ipsum nulla pharetra erat, non pellentesque nulla odio vitae magna. Morbi augue mauris, tristique ac purus id, cursus cursus elit. Donec iaculis lobortis neque, non semper odio dapibus sit amet. Integer quis ultrices nisl. Maecenas vel imperdiet elit, id fermentum arcu. In hac habitasse platea dictumst. Proin adipiscing enim vitae nunc tempor, et ultrices erat euismod. In ac viverra quam.</p>
-<p>Phasellus pellentesque elit ac nibh varius semper. Aliquam id neque ornare, blandit sem auctor, scelerisque elit. Donec in tortor sem. Morbi rutrum commodo sem ac interdum. Proin mauris nisi, cursus vel elementum ut, volutpat aliquet ante. Etiam ante neque, suscipit nec velit ornare, pellentesque consequat diam. Pellentesque sollicitudin nec orci nec accumsan. Integer et felis commodo, eleifend mauris nec, molestie augue. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Integer sit amet sem egestas, pharetra odio vel, dictum nisi.</p>
-<p>Donec eget volutpat augue, id volutpat erat. Sed fringilla metus nec nibh dapibus, euismod viverra ligula rutrum. Ut non pretium eros, a lacinia enim. Quisque et luctus odio. Maecenas eleifend arcu ac sapien placerat, nec adipiscing arcu dignissim. Aliquam tristique elementum mauris, ornare hendrerit lectus. Sed mi erat, facilisis nec augue sit amet, posuere viverra ipsum.</p>
+<h2>5 July 2014 &mdash; 06:00 to 12:00 UTC</h2>
+<section class="row" id="realops-quick-stats">
+  <div class="col-md-6">
+    <div class="icon fa fa-map-marker"></div>
+    <div class="realops-quick-info">Sydney Airport</div>
+  </div>
+  <div class="col-md-6">
+    <div class="icon fa fa-arrow-up"></div>
+    <div class="realops-quick-info">165 Departures</div>
+  </div>
+  <div class="col-md-6">
+    <div class="icon fa fa-arrow-down"></div>
+    <div class="realops-quick-info">169 Arrivals</div>
+  </div>
+  <div class="col-md-6">
+    <div class="icon fa fa-microphone"></div>
+    <div class="realops-quick-info">30 ATC Shifts</div>
+  </div>
+</section>
+<section id="realops-index-copy">
+  <p>For six hours in July, VATPAC invites <strong>you</strong> to join us in recreating the chaos at Sydney Airport!</p>
+  <p>Sydney Kingsford-Smith International Airport is the busiest airport in Australia by passenger volume and features the <strong>longest runway</strong> in the southern hemisphere.</p>
+  <p>Over <strong>300 flights</strong> have been loaded into our state-of-the-art bookings system, right here on this website, with a fantastic mix of international, domestic and regional flights and a diverse range of operators to choose from.</p>
+  <p>The fun doesn't stop there &ndash; with over <strong>30 ATC shifts</strong> over six hours, there is surely someting for everyone.</p>
+  <p>There will be plenty of traffic, so make sure to bring plenty of extra fuel and brush up on your holding patterns just in case.</p>
+  <p><a href="http://www.timeanddate.com/worldclock/fixedtime.html?msg=RealOps+Sydney&iso=20140705T06&ah=6" target="_blank"><em>Find event times in your local time zone</em></p>
+  <p><a href="<?=Route::link('schedule')?>" class="btn btn-default">Book a flight</a> <a href="<?=Route::link('atc')?>" class="btn btn-default">Register to provide ATC</a></p>
+</section>
