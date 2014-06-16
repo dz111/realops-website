@@ -41,14 +41,20 @@ function check_flight($flight) {
     $result .= "Neither ADEP or ADES are YSSY. ";
   }
   if ($flight["sta"] < $flight["std"]) {
-    $result .= "STA is earlier than STD ('save' module will add 24 hours). ";
+    $result .= "STA is earlier than STD";
   }
   return $result;
 }
 
 function save_flight($flight) {
   if ($flight["sta"] < $flight["std"]) {
-    $flight["sta"] += 24 * 60 * 60;  // Add 24 hours if sta < std
+    if ($flight["adep"] == "YSSY") {
+      $flight["sta"] += 24 * 60 * 60;  // Add 24 hours to sta
+    } elseif ($flight["ades"] == "YSSY") {
+      $flight["std"] -= 24 * 60 * 60;  // Subtract 24 hours from std
+    } else {
+      return 'STA is earlier than STD and neither ADEP or ADES are YSSY';
+    }
   }
   $flight["std"] = date('Y-m-d H:i:s', $flight["std"]);
   $flight["sta"] = date('Y-m-d H:i:s', $flight["sta"]);
