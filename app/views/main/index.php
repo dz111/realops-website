@@ -11,7 +11,7 @@
   </div>
   <div class="col-md-6">
     <div class="icon fa fa-arrow-up"></div>
-    <div class="realops-quick-info">165 Departures</div>
+    <div class="realops-quick-info">163 Departures</div>
   </div>
   <div class="col-md-6">
     <div class="icon fa fa-arrow-down"></div>
