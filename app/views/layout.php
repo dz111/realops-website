@@ -100,6 +100,11 @@ if (isset($menu) && $menu == 'index') { ?>
 if (Auth::check()) {?>
                 <p>Welcome, <?=Auth::user()->name?></p>
                 <p><a href="<?=Route::link('schedule/user')?>">My flights</a></p>
+<?php
+  if (Auth::user()->admin) { ?>
+                <p><a href="<?=Route::link('admin')?>">Admin panel</a></p>
+<?php
+  } ?>
                 <p><a href="<?=Route::link('logout')?>?return_url=<?=util::current_url_enc()?>">Logout</a></p>
 <?php
 } else { ?>

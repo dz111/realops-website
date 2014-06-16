@@ -5,5 +5,6 @@
     <li><a href="<?=Route::link('admin/insertmass')?>">Mass insert flights</a></li>
     <li>Update flight</li>
     <li>Mass update flights</li>
+    <li><a href="<?=Route::link('schedule')?>?show=booked">View booked flights</a></li>
   </ul>
 </p>

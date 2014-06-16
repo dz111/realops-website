@@ -1,6 +1,7 @@
 <?php
 // Load config
 require("config.php");
+require_once("array_column.php");  // Compatibility with PHP < 5.5
 
 // Debug
 if (DEBUG) {
@@ -8,7 +9,7 @@ if (DEBUG) {
   error_reporting(E_ALL);
 } else {
   ini_set('display_errors','Off');
-  error_reporting(E_NONE);
+  error_reporting(E_ALL);
 }
 
 // Website options
