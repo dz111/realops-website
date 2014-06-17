@@ -72,9 +72,9 @@ function sortind($key) {
       <th<?=sortind("acid")?>><a href="<?=setsort("acid")?>">Flight</a></th>
       <th>Type</th>
       <th<?=sortind("adep")?>><a href="<?=setsort("adep")?>">Origin</a></th>
-      <th<?=sortind("std")?>><a href="<?=setsort("std")?>">STD</a></th>
+      <th<?=sortind("std")?>><a href="<?=setsort("std")?>">STD</a><br />(UTC)</th>
       <th<?=sortind("ades")?>><a href="<?=setsort("ades")?>">Destination</a></th>
-      <th<?=sortind("sta")?>><a href="<?=setsort("sta")?>">STA</a></th>
+      <th<?=sortind("sta")?>><a href="<?=setsort("sta")?>">STA</a><br />(UTC)</th>
       <th>Booked by</th>
     </tr>
   </thead>
