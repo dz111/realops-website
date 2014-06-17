@@ -70,7 +70,7 @@ table.table {
 
 #realops-flight-schedule a {
   color: inherit;
-  text-decoration: none;
+  text-decoration: underline;
 }
 
 #realops-flight-schedule th.realops-sort-asc::after {

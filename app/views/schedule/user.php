@@ -6,9 +6,9 @@
       <th>Flight</th>
       <th>Type</th>
       <th>Origin</th>
-      <th>STD</th>
+      <th>STD<br />(UTC)</th>
       <th>Destination</th>
-      <th>STA</th>
+      <th>STA<br />(UTC)</th>
     </tr>
   </thead>
   <tbody>
