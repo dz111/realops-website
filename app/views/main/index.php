@@ -7,7 +7,7 @@
   </div>
   <div class="col-md-6">
     <div class="icon fa fa-microphone"></div>
-    <div class="realops-quick-info">30 ATC Shifts</div>
+    <div class="realops-quick-info">30+ ATC Shifts</div>
   </div>
   <div class="col-md-6">
     <div class="icon fa fa-arrow-up"></div>
@@ -15,7 +15,7 @@
   </div>
   <div class="col-md-6">
     <div class="icon fa fa-arrow-down"></div>
-    <div class="realops-quick-info">169 Arrivals</div>
+    <div class="realops-quick-info">152 Arrivals</div>
   </div>
 </section>
 <section id="realops-index-copy">
