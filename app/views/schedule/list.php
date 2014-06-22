@@ -66,6 +66,11 @@ function sortind($key) {
            <a href="<?=setparam("filter", false)?>">All</a>
 <br />Show: <a href="<?=setparam("show", "available")?>">Available</a> |
             <a href="<?=setparam("show", false)?>">All</a></p>
+<?php
+if (isset($_GET['show']) && $_GET['show'] == "booked") { ?>
+<p>Flights booked: <strong><?=count($flights)?></strong></p>
+<?php
+} ?>
 <table class="table table-hover" id="realops-flight-schedule">
   <thead>
     <tr>

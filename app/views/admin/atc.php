@@ -1,3 +1,4 @@
+<p>Registrations: <strong><?=count($atc)?></strong></p>
 <table class="table">
   <thead>
     <tr>
