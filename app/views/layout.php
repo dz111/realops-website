@@ -74,7 +74,7 @@ if (isset($menu) && $menu == 'index') { ?>
                 <li<?php menu_active('sked') ?>><a href="<?=Route::link('schedule')?>">Book a Flight</a></li>
                 <li<?php menu_active('pilots') ?>><a href="<?=Route::link('pilots')?>">Pilot Briefing</a></li>
                 <li<?php menu_active('charts') ?>><a href="<?=Route::link('charts')?>">Scenery and Charts</a></li>
-                <li<?php menu_active('atc') ?>><a href="<?=Route::link('atc')?>">ATC Information</a></li>
+                <li<?php menu_active('atc') ?>><a href="<?=Route::link('atc')?>">ATC Registration</a></li>
                 <li<?php menu_active('contact') ?>><a href="<?=Route::link('contact')?>">Contact Us</a></li>
               </ul>
             </div><!-- /.navbar-collapse -->

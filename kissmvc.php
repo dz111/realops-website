@@ -138,7 +138,7 @@ abstract class Model {
     if (isset($arg) && $arg) {
       if (is_array($arg)) {
         // Set up a new Model if given array
-        $this->load_from_array($arg);
+        $this->load_from_array($arg, true);
       } else {
         // Retrieve row for given primary key
         $this->select_row($arg);
@@ -331,9 +331,13 @@ abstract class Model {
     }
   }
   
-  protected function load_from_array($arr) {
+  protected function load_from_array($arr, $verbatim=false) {
     foreach ($arr as $k => $v) {
-      $this->{$k} = $v;
+      if ($verbatim) {
+        $this->rs[$k] = $v;
+      } else {
+        $this->{$k} = $v;
+      }
     }
     return $this;
   }
