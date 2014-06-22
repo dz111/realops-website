@@ -56,4 +56,7 @@ if (Auth::check()) {
   <button type="submit" class="btn btn-primary">Register</button>
 </form>
 <?php
+} else { ?>
+<p>Please <a href="<?=Route::link('login')?>?return_url=<?=util::current_url_enc()?>" data-toggle="modal" data-target="#realops-login-info" >login</a> to register.</p>
+<?php
 } ?>
