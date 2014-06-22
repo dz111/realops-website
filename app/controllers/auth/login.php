@@ -25,6 +25,6 @@ function get_callback_url() {
                 'https' : 'http';
   $host = $_SERVER['HTTP_HOST'];
   $path = Route::link('auth/callback');
-  if (DEBUG) return 'oob';
+  //if (DEBUG) return 'oob';
   return $protocol . '://' . $host . $path;
 }

@@ -1,7 +1,6 @@
 <?php
 function _form() {
-  $user = new User(1027224);
   $data['menu'] = 'atc';
-  $data['user'] = $user;
-  View::auto($data);
+  if (Auth::check() && check_dupe()) View::output('atc/info', $data);
+  else View::auto($data);
 }

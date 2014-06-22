@@ -16,11 +16,12 @@ Route::get('/pilots', 'main/pilots', 'pilots');
 Route::get('/charts', 'main/charts', 'charts');
 
 Route::get('/atc', 'atc/form', 'atc');
-Route::post('/atc', 'atc/submit', 'atc/submit');
+Route::post('/atc', 'atc/submit');
 
 Route::get('/contact', 'contact/form', 'contact');
-Route::post('/contact', 'contact/submit', 'contact/submit');
+Route::post('/contact', 'contact/submit');
 
 Route::get(ADMIN_PATH, 'admin/index', 'admin', true);
 Route::get(ADMIN_PATH . '/insertmass', 'admin/insertmass', 'admin/insertmass', true);
 Route::post(ADMIN_PATH . '/insertmass', 'admin/doinsertmass', '', true);
+Route::get(ADMIN_PATH . 'admin/atc', 'admin/atc', 'admin/atc', true);
