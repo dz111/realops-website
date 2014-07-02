@@ -16,7 +16,7 @@ foreach ($counts as $port => $count) { ?>
   foreach ($count as $period => $data) { ?>
     <tr>
       <td><?=$period?></td>
-      <td><?=$data['total']?></td>
+      <td><?=isset($data['total']) ? $data['total'] : 0?></td>
       <td><?=isset($data['dep']) ? $data['dep'] : 0?></td>
       <td><?=isset($data['arr']) ? $data['arr'] : 0?></td>
     </tr>

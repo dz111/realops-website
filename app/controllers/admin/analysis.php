@@ -7,13 +7,14 @@ function _analysis() {
 }
 
 function countairport($port) {
-  $deps = Flight::where('adep', '=', $port)->all();
-  $arrs = Flight::where('ades', '=', $port)->all();
+  $deps = Flight::where('user_id', 'IS NOT NULL', '')->where('adep', '=', $port)->all();
+  $arrs = Flight::where('user_id', 'IS NOT NULL', '')->where('ades', '=', $port)->all();
   $depcount = countflights($deps, 'std');
   $arrcount = countflights($arrs, 'sta');
   $count = pivot(array('dep' => $depcount,
                        'arr' => $arrcount));
   ksort($count);
+  $count['Total'] = column_sum($count);
   return $count;
 }
 
@@ -41,4 +42,18 @@ function pivot($tables) {
     $pivot[$key]['total'] = array_sum($row);
   }
   return $pivot;
+}
+
+function column_sum($arr) {
+  $out = array();
+  foreach ($arr as $row) {
+    foreach ($row as $col => $v) {
+      if (isset($out[$col])) {
+        $out[$col] += $v;
+      } else {
+        $out[$col] = $v;
+      }
+    }
+  }
+  return $out;
 }
