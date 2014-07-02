@@ -6,6 +6,7 @@
     <li>Update flight</li>
     <li>Mass update flights</li>
     <li><a href="<?=Route::link('schedule')?>?show=booked">View booked flights</a></li>
-    <li><a href="<?=Route::link('admin/atc')?>">View ATC Registration</a></li>
+    <li><a href="<?=Route::link('admin/analysis')?>">Analysis</a></li>
+    <li><a href="<?=Route::link('admin/atc')?>">View ATC registration</a></li>
   </ul>
 </p>
