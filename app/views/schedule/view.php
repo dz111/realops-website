@@ -46,6 +46,10 @@ if ($flight->user) {
   } else { ?>
   <p>This flight has been booked by <strong><?=$flight->user->name?></strong></p>
 <?php
+    if (Auth::check() && Auth::user()->admin) { ?>
+  <p>User email address: <?=$flight->user->email?></p>
+<?php
+    }
   }
 } else {
   if (Auth::check()) { ?>
