@@ -94,3 +94,11 @@ table.table {
   border-top: none;
   border-bottom: dashed 1px #666666;
 }
+
+#realops-atc-roster td {
+  border: solid #aaa 1px;
+}
+
+#realops-atc-roster td.empty {
+  background-color: #aaa;
+}
