@@ -6,6 +6,18 @@ if (!Auth::check() || !Auth::user()->admin) {
 define('EVENTDATE', '2014-07-05');
 $GLOBALS['flight_columns'] = array("acid", "type", "adep", "ades", "std", "sta", "route", "info");
 
+function mapflights($flights, $function) {
+  $results = array_map($function, $flights);
+  $result_map = array_combine(array_column($flights, "acid"), $results);
+  $count = array_count_values($results);
+  $npasses = isset($count['']) ? $count[''] : 0;
+  $data = array("action" => $function,
+                "results" => $result_map,
+                "flights" => count($flights),
+                "passes" => $npasses);
+  View::output("admin/results", $data);
+}
+
 function read_flights($fname) {
   global $flight_columns;
   $fh = fopen($fname, 'r');
@@ -46,24 +58,17 @@ function check_flight($flight) {
   return $result;
 }
 
-function save_flight($flight) {
+function fix_flight_times(&$flight) {
   if ($flight["sta"] < $flight["std"]) {
     if ($flight["adep"] == "YSSY") {
       $flight["sta"] += 24 * 60 * 60;  // Add 24 hours to sta
     } elseif ($flight["ades"] == "YSSY") {
       $flight["std"] -= 24 * 60 * 60;  // Subtract 24 hours from std
     } else {
-      return 'STA is earlier than STD and neither ADEP or ADES are YSSY';
+      return false;
     }
   }
   $flight["std"] = date('Y-m-d H:i:s', $flight["std"]);
   $flight["sta"] = date('Y-m-d H:i:s', $flight["sta"]);
-  $flight["user_id"] = null;
-  $fm = new Flight($flight);
-  $fm->save();
-  if ($fm && $fm->exists()) {
-    return '';
-  } else {
-    return 'Failed to save';
-  }
+  return true;
 }
