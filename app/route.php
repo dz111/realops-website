@@ -24,5 +24,8 @@ Route::post('/contact', 'contact/submit');
 Route::get(ADMIN_PATH, 'admin/index', 'admin', true);
 Route::get(ADMIN_PATH . '/insertmass', 'admin/insertmass', 'admin/insertmass', true);
 Route::post(ADMIN_PATH . '/insertmass', 'admin/doinsertmass', '', true);
+Route::get(ADMIN_PATH . '/editmass', 'admin/editmass', 'admin/editmass', true);
+Route::post(ADMIN_PATH . '/editmass', 'admin/doeditmass', '', true);
+Route::get(ADMIN_PATH . '/noroutes', 'admin/getnoroutes', 'admin/noroutes', true);
 Route::get(ADMIN_PATH . '/atc', 'admin/atc', 'admin/atc', true);
 Route::get(ADMIN_PATH . '/analysis', 'admin/analysis', 'admin/analysis', true);

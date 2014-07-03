@@ -1,10 +1,10 @@
 <?php
-function _doinsertmass() {
+function _doeditmass() {
   $action = $_POST['action'];
-  $fname = $_FILES["insertfile"]["tmp_name"];
+  $fname = $_FILES["editfile"]["tmp_name"];
   $flights = read_flights($fname);
   if (strtoupper($action) == "SAVE") {
-    mapflights($flights, "save_new_flight");
+    mapflights($flights, "save_existing_flight");
   } elseif (strtoupper($action) == "CHECK") {
     mapflights($flights, "check_flight");
   } else {
@@ -12,13 +12,19 @@ function _doinsertmass() {
   }
 }
 
-function save_new_flight($flight) {
+function save_existing_flight($flight) {
   $ok = fix_flight_times($flight);
   if (!$ok) return 'STA is earlier than STD and neither ADEP or ADES are YSSY';
-  $flight["user_id"] = null;
-  $fm = new Flight($flight);
+  $fm = Flight::where('acid','=',$flight['acid'])->get();
+  if (!$fm) {
+    return "Flight doesn't exist";
+  }
+  $fm = $fm[0];
+  foreach ($flight as $k => $v) {
+    $fm->{$k} = $v;
+  }
   $fm->save();
-  if ($fm && $fm->exists()) {
+  if (!$fm->dirty()) {
     return '';
   } else {
     return 'Failed to save';
